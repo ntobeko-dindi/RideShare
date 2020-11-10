@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#425C59</color>
+    <color name="colorPrimaryDark">#112320</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorSecondary">#FFCEA3</color>
+    <color name="transparentWhite">#cccccc</color>
+    <color name="colorWhite">#fff</color>
+    <color name="colorPurple">#22FF14</color>
+    <color name="colorCreamWhite">#fff</color>
+    <color name="colorBubble">#D6C4C4</color>
+    <color name="colorBubbleIcon">#8A16E2</color>
+</resources>

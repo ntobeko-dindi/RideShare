@@ -1,0 +1,21 @@
+LONG DISTANCE
+
+from
+to
+date
+no if sits
+price
+time
+
+
+
+
+SHORT DISTANCE
+
+from
+to
+no if sits
+starting date
+ending date
+including weekends(yes/no)
+daily-price

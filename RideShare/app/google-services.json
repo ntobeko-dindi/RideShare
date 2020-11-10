@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "298659425253",
+    "firebase_url": "https://xcoding-inc-fec2c.firebaseio.com",
+    "project_id": "xcoding-inc-fec2c",
+    "storage_bucket": "xcoding-inc-fec2c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298659425253:android:440c6587af28f4acc55d0c",
+        "android_client_info": {
+          "package_name": "com.xcoding.rideshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298659425253-70hna5d8fp3mjsp2vog2u80hlfpsvkuo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjpagjH12p-n4U_IQtPYSJEosquW3vInk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298659425253-70hna5d8fp3mjsp2vog2u80hlfpsvkuo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
