@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -18,23 +20,41 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
-    //TextView textView;
+    RecyclerView recyclerView;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-       // textView = view.findViewById(R.id.someText);
+        recyclerView = view.findViewById(R.id.recyclerview);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //StringBuilder stringBuilder = new StringBuilder();
 
-        //String text = "i hope this shit works okay this time.";
+        Rides[] myMovieData = new Rides[]{
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
+                new Rides("Ntobeko Dindi","Any delicate you how kindness horrible outlived servants. You high bed wish help call draw side. Girl quit if case mr sing as no have. At none neat am do over will. ",R.drawable.ic_baseline_person_black,"11h ago"),
 
-       // for (int c = 0; c < 500; c++){
-            //stringBuilder.append(text);
-        //}
+        };
 
-       // textView.setText(stringBuilder.toString());
+        RideAdapter myMovieAdapter = new RideAdapter(myMovieData,HomeFragment.this);
+        recyclerView.setAdapter(myMovieAdapter);
 
         return view;
     }

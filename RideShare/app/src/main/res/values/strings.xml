@@ -166,4 +166,8 @@
     <string name="price">Price</string>
     <string name="submit">submit</string>
     <string name="send_verification_email">Send verification email</string>
+    <string name="testingRecyclerview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
+    <string name="mthokozisi_dlamini">Mthokozisi Dlamini</string>
+    <string name="_1h_ago">1h ago</string>
+    <string name="message">MESSAGE</string>
 </resources>

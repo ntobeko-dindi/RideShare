@@ -153,7 +153,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         menuItems.add(new MenuItem("My Profile", R.drawable.feed_bg));
         menuItems.add(new MenuItem("Offer Ride", R.drawable.ford_mustang_car_215784));
         menuItems.add(new MenuItem("Request Ride", R.drawable.request_ride));
-        menuItems.add(new MenuItem("Chats", R.drawable.chats));
+        menuItems.add(new MenuItem("More", R.drawable.moreaction));
 
         //then add them to navigation drawer
 
@@ -199,7 +199,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                         break;
                     }
                     case 4: {
-                        fragmentClass = ChatsFragment.class;
+                        fragmentClass = MoreFragment.class;
                         break;
                     }
                 }
