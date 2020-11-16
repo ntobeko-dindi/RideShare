@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@drawable/second_slide_background"
-    android:layout_height="match_parent"
-    tools:context=".SecondSlideFragment">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/slide_two_img"
@@ -49,7 +48,7 @@
         android:id="@+id/slide_two_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="32dp"
         android:text="@string/finalise"
         android:textColor="@color/White"
         android:textSize="28sp"
@@ -63,28 +62,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="40dp"
-        android:textAlignment="center"
+        android:layout_marginBottom="16dp"
         android:text="@string/firstSlideTxt"
+        android:textAlignment="center"
         android:textColor="@color/White"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/slide_two_header" />
-
-    <Button
-        android:id="@+id/second_slide_btn"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
-        android:background="@drawable/round_btn"
-        android:text="@string/_continue"
-        android:textColor="@color/Black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slide_two_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,9 @@
 package com.xcoding.rideshare;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +21,9 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
@@ -27,6 +33,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     com.google.android.material.textfield.TextInputEditText fname,lname,email,number;
     TextView profileName;
     CircleImageView profilePic;
+
+    private static final int SELECT_PHOTO = 100;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,7 +55,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         editProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Opening File Explorer...", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Opening File Explorer...", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent,SELECT_PHOTO);
             }
         });
 
@@ -100,4 +112,55 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         //TODO write code that will retrieve user information from the database if the user does not login with facebook or google
         Toast.makeText(getContext(),"you logged in using an email and password option",Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == SELECT_PHOTO){
+            if(resultCode == Activity.RESULT_OK){
+                Uri selectImage = data.getData();
+                InputStream inputStream = null;
+
+                try{
+                    assert selectImage != null;
+                    inputStream = getContext().getContentResolver().openInputStream(selectImage);
+                }
+                catch (FileNotFoundException ex){
+                    ex.printStackTrace();
+                }
+                BitmapFactory.decodeStream(inputStream);
+                Glide.with(this).load(String.valueOf(selectImage)).into(profilePic);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

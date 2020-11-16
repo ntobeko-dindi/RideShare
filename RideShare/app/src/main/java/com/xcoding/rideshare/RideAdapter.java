@@ -1,5 +1,7 @@
 package com.xcoding.rideshare;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +12,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder>  {
+public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> implements View.OnClickListener {
     Rides[] rides;
-    HomeFragment context;
+    HomeFragment homeFragment;
 
     public RideAdapter(Rides[] myMovieData,HomeFragment activity) {
         this.rides = myMovieData;
-        this.context = activity;
+        this.homeFragment = activity;
     }
 
     @NonNull
@@ -29,12 +31,21 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder>  {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Rides myMovieDataList = rides[position];
         holder.description.setText(myMovieDataList.getDescription());
         holder.name.setText(myMovieDataList.getUsername());
         holder.date.setText(myMovieDataList.getDate());
         holder.image.setImageResource(myMovieDataList.getImage());
+
+        holder.offer.setOnClickListener(new View.OnClickListener() {
+            Context context = homeFragment.getContext();
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"offering ride",Toast.LENGTH_LONG).show();
+            }
+        });
 
         holder.description.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,11 +60,17 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder>  {
         return rides.length;
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         TextView description;
         TextView date;
         TextView name;
+        TextView offer;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,6 +78,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder>  {
             name = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
             date = itemView.findViewById(R.id.date);
+            offer = itemView.findViewById(R.id.txt_offer);
 
         }
     }

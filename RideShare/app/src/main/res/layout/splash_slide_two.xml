@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/last_slide_background">
+    android:background="@drawable/second_slide_background"
+    android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/slide_three_img"
+        android:id="@+id/slide_two_img"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/three"
+        android:src="@drawable/two"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/last_slide_picture" />
+        android:contentDescription="@string/second_slide_picture" />
 
     <TextView
-        android:id="@+id/slide_three_welcome"
+        android:id="@+id/slide_two_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -28,51 +28,62 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slide_three_img" />
+        app:layout_constraintTop_toBottomOf="@+id/slide_two_img" />
 
     <TextView
-        android:id="@+id/slide_three_slide_count"
+        android:id="@+id/slide_two_slide_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="@string/_3_of_3"
+        android:text="@string/_2_of_3"
         android:textColor="@color/colorSecondary"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/slide_three_header"
+        app:layout_constraintBottom_toTopOf="@+id/slide_two_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slide_three_welcome" />
+        app:layout_constraintTop_toBottomOf="@+id/slide_two_welcome" />
 
     <TextView
-        android:id="@+id/slide_three_header"
+        android:id="@+id/slide_two_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/travel"
+        android:layout_marginTop="56dp"
+        android:text="@string/finalise"
         android:textColor="@color/White"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slide_three_welcome" />
+        app:layout_constraintTop_toBottomOf="@+id/slide_two_welcome" />
 
     <TextView
-        android:id="@+id/slide_three_text"
+        android:id="@+id/slide_two_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="40dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/firstSlideTxt"
         android:textAlignment="center"
+        android:text="@string/firstSlideTxt"
         android:textColor="@color/White"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slide_three_header" />
+        app:layout_constraintTop_toBottomOf="@+id/slide_two_header" />
+
+    <Button
+        android:id="@+id/second_slide_btn"
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:background="@drawable/round_btn"
+        android:text="@string/_continue"
+        android:textColor="@color/Black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/slide_two_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
