@@ -1,4 +1,4 @@
-package com.xcoding.rideshare;
+package com.xcoding.rideshare.fragments;
 
 import android.app.DatePickerDialog;
 import android.graphics.Color;
@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.xcoding.rideshare.R;
 
 import java.util.Calendar;
 

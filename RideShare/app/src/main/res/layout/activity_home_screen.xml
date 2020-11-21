@@ -128,6 +128,8 @@
             android:layout_gravity="bottom|end"
             android:elevation="100dp"
             app:pressedTranslationZ="12dp"
+            android:foregroundGravity="bottom"
+            app:layout_anchorGravity="bottom"
             app:rippleColor="@color/colorPrimaryDark"
             android:contentDescription="@string/main_fab" />
 

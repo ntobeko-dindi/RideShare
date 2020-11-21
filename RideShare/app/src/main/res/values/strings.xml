@@ -170,4 +170,9 @@
     <string name="mthokozisi_dlamini">Mthokozisi Dlamini</string>
     <string name="_1h_ago">1h ago</string>
     <string name="message">MESSAGE</string>
+
+    <!--    facebook login-->
+    <string name="facebook_app_id">368528027548629</string>
+    <string name="fb_login_protocol_scheme">fb368528027548629</string>
+
 </resources>

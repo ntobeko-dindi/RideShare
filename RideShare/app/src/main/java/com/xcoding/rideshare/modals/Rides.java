@@ -1,4 +1,4 @@
-package com.xcoding.rideshare;
+package com.xcoding.rideshare.modals;
 
 public class Rides {
 

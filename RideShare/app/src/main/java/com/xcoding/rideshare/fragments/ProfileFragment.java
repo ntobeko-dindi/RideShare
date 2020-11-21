@@ -1,4 +1,4 @@
-package com.xcoding.rideshare;
+package com.xcoding.rideshare.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.xcoding.rideshare.R;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -102,7 +103,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             }
 
 
-            //TODO set text-fields uneditable if a user loggs in using google or sign in option
+            //TODO set text-fields uneditable if a user logs in using google or sign in option
         }catch (NullPointerException e){
             getUserFromExternalDB();
         }

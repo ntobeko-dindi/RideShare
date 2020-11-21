@@ -1,4 +1,4 @@
-package com.xcoding.rideshare;
+package com.xcoding.rideshare.modals;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.xcoding.rideshare.LoginActivity;
+import com.xcoding.rideshare.R;
 
 public class ForgotPassword extends AppCompatActivity {
 
@@ -23,7 +26,7 @@ public class ForgotPassword extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ForgotPassword.this,LoginActivity.class));
+                startActivity(new Intent(ForgotPassword.this, LoginActivity.class));
                 finish();
             }
         });

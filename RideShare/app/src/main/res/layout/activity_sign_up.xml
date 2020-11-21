@@ -97,7 +97,7 @@
             android:drawablePadding="16dp"
             android:ems="10"
             android:hint="@string/cell_phone_number"
-            android:inputType="text"
+            android:inputType="phone"
             android:padding="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

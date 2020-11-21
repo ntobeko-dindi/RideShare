@@ -1,7 +1,6 @@
-package com.xcoding.rideshare;
+package com.xcoding.rideshare.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.xcoding.rideshare.fragments.HomeFragment;
+import com.xcoding.rideshare.R;
+import com.xcoding.rideshare.modals.Rides;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> implements View.OnClickListener {
     Rides[] rides;

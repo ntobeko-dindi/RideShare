@@ -21,6 +21,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.shrikanthravi.customnavigationdrawer2.data.MenuItem;
 import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer;
+import com.xcoding.rideshare.fragments.HomeFragment;
+import com.xcoding.rideshare.fragments.MoreFragment;
+import com.xcoding.rideshare.fragments.OfferRideFragment;
+import com.xcoding.rideshare.fragments.ProfileFragment;
+import com.xcoding.rideshare.fragments.RequestRideFragment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.xcoding.rideshare;
+package com.xcoding.rideshare.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+import com.xcoding.rideshare.R;
 
 public class ChatsFragment extends Fragment implements View.OnClickListener {
 

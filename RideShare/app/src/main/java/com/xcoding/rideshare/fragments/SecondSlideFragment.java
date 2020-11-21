@@ -1,4 +1,4 @@
-package com.xcoding.rideshare;
+package com.xcoding.rideshare.fragments;
 
 import android.os.Bundle;
 
@@ -11,6 +11,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.xcoding.rideshare.R;
 
 public class SecondSlideFragment extends Fragment {
     Animation imgin,imgout,btnanim;

@@ -1,4 +1,4 @@
-package com.xcoding.rideshare;
+package com.xcoding.rideshare.fragments;
 
 import android.app.DatePickerDialog;
 import android.graphics.Color;
@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.xcoding.rideshare.R;
 
 import java.util.Calendar;
 

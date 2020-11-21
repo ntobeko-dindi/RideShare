@@ -131,21 +131,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-        <Button
+        <com.facebook.login.widget.LoginButton
             android:id="@+id/facebook_sign_in"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
-            android:background="@drawable/round_border"
-            android:drawableStart="@drawable/ic_facebook"
-            android:elevation="101dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="@string/facebook"
             android:textSize="15sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/google_sign_in" />

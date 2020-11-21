@@ -10,4 +10,5 @@
     <color name="colorCreamWhite">#fff</color>
     <color name="colorBubble">#D6C4C4</color>
     <color name="colorBubbleIcon">#8A16E2</color>
+    <color name="transparent">#66000000</color>
 </resources>
