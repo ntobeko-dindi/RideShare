@@ -44,11 +44,11 @@
             android:layout_marginRight="32dp"
             android:autofillHints=""
             android:background="@drawable/round_border"
-            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:drawableStart="@drawable/ic_baseline_phone_24"
             android:drawablePadding="16dp"
             android:ems="10"
-            android:hint="@string/email"
-            android:inputType="text"
+            android:hint="@string/cell_number"
+            android:inputType="phone"
             android:padding="16dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -131,20 +131,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/facebook_sign_in"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/google_sign_in" />
-
         <Button
             android:id="@+id/google_sign_in"
             android:layout_width="300dp"
@@ -169,7 +155,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/round_border"
             android:drawableStart="@drawable/ic_sign_up_01"
@@ -180,7 +166,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/facebook_sign_in" />
+            app:layout_constraintTop_toBottomOf="@+id/google_sign_in" />
 
         <TextView
             android:id="@+id/textView3"
@@ -197,5 +183,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/loader"
+            android:elevation="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view2">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:layout_margin="20dp"
+                android:clickable="false"
+                android:visibility="gone" />
+
+        </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

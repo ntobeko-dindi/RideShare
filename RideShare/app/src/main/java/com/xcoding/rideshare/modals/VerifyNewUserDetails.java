@@ -1,5 +1,7 @@
 package com.xcoding.rideshare.modals;
 
+import android.util.Patterns;
+
 public class VerifyNewUserDetails {
     private String firstName;
     private String lastName;
@@ -17,9 +19,9 @@ public class VerifyNewUserDetails {
             return "firstNameError";
         } else if ("".equals(lastName)) {
             return "lastNameError";
-        } else if ("".equals(email)) {
+        } else if ("".equals(email) || !emailOkay()){
             return "emailError";
-        } else if ("".equals(cell) || !cellIncorect()) {
+        } else if ("".equals(cell) || !isValidPhone()) {
             return "phoneNumberError";
         } else if ("".equals(pass) || !passwordFormatOkay()) {
             return "passwordError";
@@ -28,23 +30,21 @@ public class VerifyNewUserDetails {
         }
     }
 
-    public boolean cellIncorect() {
-        boolean corectPhone = true;
-
-        if (cell.length() != 10) {
-            corectPhone = !corectPhone;
-        } else if (!"0".equals(String.valueOf(cell.charAt(0)))) {
-            corectPhone = !corectPhone;
-        } else {
-            for (int x = 0; x < cell.length(); x++) {
-                if (!Character.isDigit(cell.charAt(x))) {
-                    corectPhone = !corectPhone;
-                }
-            }
+    public boolean emailOkay() {
+        boolean isValid = false;
+        if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            isValid = true;
         }
-        return corectPhone;
+        return isValid;
     }
 
+    public boolean isValidPhone() {
+        if (cell.length()!=10) {
+            return false;
+        } else {
+            return android.util.Patterns.PHONE.matcher(cell).matches();
+        }
+    }
     public boolean passwordFormatOkay() {
         boolean isOkay = false;
 
@@ -97,16 +97,13 @@ public class VerifyNewUserDetails {
 
     //getters
 
+
     public String getFirstName() {
         return firstName;
     }
 
     public String getLastName() {
         return lastName;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getCell() {

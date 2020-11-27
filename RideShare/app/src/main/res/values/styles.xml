@@ -24,4 +24,8 @@
         <item name="android:backgroundTint">@color/transparentWhite</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/bg1</item>
+    </style>
+
 </resources>

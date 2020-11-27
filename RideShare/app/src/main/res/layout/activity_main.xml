@@ -4,18 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/last_slide_background"
     android:gravity="center"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/slide_one_img"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/app_logo"
+
+    <RelativeLayout
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="330dp"
+        android:layout_marginEnd="171dp"
+        android:background="@drawable/round_cycle"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_marginBottom="331dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/slide_one_img"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:elevation="100dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/app_logo"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

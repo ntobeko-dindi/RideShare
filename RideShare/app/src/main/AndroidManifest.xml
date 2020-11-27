@@ -34,11 +34,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".modals.ForgotPassword" />
+        <activity android:name=".ForgotPassword" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".HomeScreenActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity" />
+        <activity android:name=".MainActivity" android:theme="@style/SplashTheme" android:clearTaskOnLaunch="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

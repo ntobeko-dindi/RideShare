@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.xcoding.rideshare.HomeScreenActivity;
 import com.xcoding.rideshare.R;
 
 import java.io.FileNotFoundException;
@@ -56,8 +57,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         editProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getContext(), "Opening File Explorer...", Toast.LENGTH_LONG).show();
-
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent,SELECT_PHOTO);

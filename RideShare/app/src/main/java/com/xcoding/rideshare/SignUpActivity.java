@@ -1,26 +1,46 @@
 package com.xcoding.rideshare;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.xcoding.rideshare.modals.VerifyNewUserDetails;
+
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    private static final String TAG = "CREATE";
     Button signUp;
     TextView backToSignIn;
     EditText fname, lname, email, phoneNumber, password, cPassword;
     RadioGroup radioGroup;
     RadioButton gender;
+
+    ProgressBar progressBar;
+
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private static final String USER = "users";
+    VerifyNewUserDetails newUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +58,17 @@ public class SignUpActivity extends AppCompatActivity {
         password = findViewById(R.id.signup_password_id);
         cPassword = findViewById(R.id.signup_password_confirm_id);
         radioGroup = findViewById(R.id.radioGroup);
+        progressBar = findViewById(R.id.progress_bar);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        mDatabase = database.getReference(USER);
+        mAuth = FirebaseAuth.getInstance();
 
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                doSomething();
+                prepareNewUser();
             }
         });
 
@@ -56,7 +81,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void doSomething() {
+    private void prepareNewUser() {
         try {
             String firstName = fname.getText().toString().trim();
             String lastName = lname.getText().toString().trim();
@@ -69,7 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
             String sex;
 
 
-            VerifyNewUserDetails newUser = new VerifyNewUserDetails();
+            newUser = new VerifyNewUserDetails();
 
             if (pass.equals(cPass)) {
 
@@ -97,18 +122,12 @@ public class SignUpActivity extends AppCompatActivity {
                     password.setError("Password Must Have At least 1 special Character, 1 Uppercase letter, 1 Digit and no less that 8 Characters");
                     password.requestFocus();
                 } else if (userCredentials.equals("ok")) {
+                    progressBar.setVisibility(View.VISIBLE);
                     sex = this.gender.getText().toString().trim();
                     newUser.setGender(sex);
+                    newUser.setCell(cell);
 
-                    //TODO code to create the user profile
-                    boolean success = createUserAccount();
-
-                    if (success){
-                        startActivity(new Intent(getApplicationContext(),VerifyUserAccountActivity.class));
-                    }else {
-                        Toast.makeText(getApplicationContext(),"Sign Up Failed",Toast.LENGTH_LONG).show();
-                    }
-
+                    createUserAccount(mail,pass);
                 }
             } else {
                 cPassword.setError("Password Mismatch");
@@ -116,18 +135,41 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
         } catch (NullPointerException e) {
-            Toast.makeText(getApplicationContext(), "Please Select Your Gender", Toast.LENGTH_LONG).show();
+            makeText(getApplicationContext(), "Please Select Your Gender", LENGTH_LONG).show();
         } catch (Exception ex) {
-            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+            makeText(getApplicationContext(), ex.getMessage(), LENGTH_LONG).show();
         }
     }
 
-    private boolean createUserAccount() {
-        boolean accountCreated = false;
+    private void createUserAccount(String email,String password) {
+        //TODO code to create the user profile
 
-        
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
 
-        return accountCreated;
+                            assert user != null;
+                            String keyId = user.getUid();
+                            mDatabase.child(keyId).setValue(newUser);
+                            progressBar.setVisibility(View.GONE);
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            finish();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            progressBar.setVisibility(View.GONE);
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            makeText(getApplicationContext(), "Authentication Failed", LENGTH_LONG).show();
+                        }
+
+                        // ...
+
+                    }
+                });
     }
 
 }

@@ -174,5 +174,18 @@
     <!--    facebook login-->
     <string name="facebook_app_id">368528027548629</string>
     <string name="fb_login_protocol_scheme">fb368528027548629</string>
+    <string name="registered_account_email">Enter your registered account email</string>
+    <string name="cell_number">Cell Number</string>
+    <string name="next">next</string>
+    <string name="vehicle_details">VEHICLE DETAILS</string>
+    <string name="millage">Millage</string>
+    <string name="first_name2">First name</string>
+    <string name="last_name2">Last name</string>
+    <string name="date_of_birth2">Date of birth</string>
+    <string name="colour">Colour</string>
+    <string name="year">Year</string>
+    <string name="model">Model</string>
+    <string name="make">Make</string>
+    <string name="upload_images">UPLOAD IMAGES</string>
 
 </resources>

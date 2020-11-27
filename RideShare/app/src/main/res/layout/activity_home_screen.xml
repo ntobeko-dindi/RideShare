@@ -26,68 +26,14 @@
 
         </com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/join_group_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:backgroundTint="@color/transparent_black_percent_60"
-            android:layout_marginBottom="115dp"
-            android:layout_gravity="bottom|end"
-            android:elevation="100dp"
-            android:visibility="invisible"
-            app:pressedTranslationZ="12dp"
-            android:layout_marginEnd="30dp"
-            android:src="@drawable/ic_baseline_group_24"
-            app:fabSize="mini"
-            android:contentDescription="@string/main_fab" />
+
 <!--            android:visibility="invisible"-->
-        <TextView
-            android:id="@+id/mini_fab2_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/join_group"
-            android:textStyle="bold"
-            android:visibility="invisible"
-            android:textColor="@color/Black"
-            android:layout_marginBottom="125dp"
-            android:layout_gravity="bottom|end"
-            android:elevation="100dp"
-            app:pressedTranslationZ="12dp"
-            android:layout_marginEnd="60dp"/>
+
+        <!--            android:visibility="invisible"-->
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:backgroundTint="@color/transparent_black_percent_60"
-            android:layout_marginBottom="165dp"
-            android:layout_gravity="bottom|end"
-            android:elevation="100dp"
-            android:visibility="invisible"
-            app:pressedTranslationZ="12dp"
-            android:layout_marginEnd="30dp"
-            android:src="@drawable/ic_baseline_exit_to_app_24"
-            app:fabSize="mini"
-            android:contentDescription="@string/main_fab" />
-        <!--            android:visibility="invisible"-->
-        <TextView
-            android:id="@+id/logout_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="65dp"
-            android:layout_marginBottom="175dp"
-            android:elevation="100dp"
-            android:text="@string/logout_caps"
-            android:textColor="@color/Black"
-            android:textStyle="bold"
-            android:visibility="invisible"
-            app:pressedTranslationZ="12dp" />
-
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/create_group_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:backgroundTint="@color/transparent_black_percent_60"
@@ -102,10 +48,10 @@
             android:contentDescription="@string/mini_fab" />
 <!--            android:visibility="invisible"-->
         <TextView
-            android:id="@+id/mini_fab1_tag"
+            android:id="@+id/logout_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/create_group"
+            android:text="@string/logout"
             android:visibility="invisible"
             android:textStyle="bold"
             android:textColor="@color/Black"

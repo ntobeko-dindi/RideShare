@@ -5,29 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/open_road"
-    tools:context=".SplashActivity">
-
-    <Button
-        android:id="@+id/get_started_btn"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/round_btn"
-        android:text="@string/get_started"
-        android:elevation="@dimen/cardview_compat_inset_shadow"
-        android:textColor="@color/Black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    tools:context=".fragments.DriverRegistrationFragment">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="8dp"
         android:animateLayoutChanges="true"
         android:backgroundTint="@color/transparent"
         android:elevation="100dp"
@@ -40,7 +27,13 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/round_border"
+            android:elevation="60dp">
 
         </androidx.viewpager.widget.ViewPager>
 

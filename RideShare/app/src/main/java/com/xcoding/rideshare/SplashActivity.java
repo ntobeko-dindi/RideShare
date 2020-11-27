@@ -25,19 +25,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        SharedPreferences preferences = getSharedPreferences("PREFERENCE",MODE_PRIVATE);
-        String firstTime = preferences.getString("FirstTimeInstall","");
-
-        if(firstTime.equals("Yes")){
-            //startActivity(new Intent(this,SplashActivity.class));
-            startActivity(new Intent(this,LoginActivity.class));
-            finish();
-        }else{
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("FirstTimeInstall","Yes");
-            editor.apply();
-        }
-
         ViewPager viewPager = findViewById(R.id.viewpager);
         Button getStarted = findViewById(R.id.get_started_btn);
 
