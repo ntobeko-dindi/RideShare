@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.xcoding.rideshare.HomeScreenActivity;
 import com.xcoding.rideshare.R;
 
 import java.io.FileNotFoundException;

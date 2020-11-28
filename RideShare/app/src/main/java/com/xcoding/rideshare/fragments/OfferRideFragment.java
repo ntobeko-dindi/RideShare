@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.xcoding.rideshare.R;
+import com.xcoding.rideshare.modals.LongDistanceCommuteModal;
 
 import java.util.Calendar;
 
@@ -104,20 +105,39 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
                             String inputSits = sits.getText().toString().trim();
                             String inputPrice = price.getText().toString().trim();
 
+                            boolean fieldsOkay = true;
+
                             if(inputBeginning.equals("")){
                                 showError(beginning, "departure location required");
+                                fieldsOkay = false;
                             }
                             if(inputEnd.equals("")){
                                 showError(end, "destination required");
+                                fieldsOkay = false;
                             }
                             if(inputDate.equals("")){
                                 showError(date, "departure date required");
+                                fieldsOkay = false;
                             }
                             if(inputSits.equals("")){
                                 showError(sits, "no of sits required");
+                                fieldsOkay = false;
                             }
                             if(inputPrice.equals("")){
                                 showError(price, "price per sit required");
+                                fieldsOkay = false;
+                            }
+
+                            if(fieldsOkay){
+                                LongDistanceCommuteModal longDistance = new LongDistanceCommuteModal();
+                                longDistance.setBeginning(beginning.toString());
+                                longDistance.setEnd(end.toString());
+                                longDistance.setDate(date.toString());
+                                longDistance.setSits(sits.toString());
+                                longDistance.setPrice(price.toString());
+
+                                //writing the trip into firebase
+
                             }
                         }
                     });
@@ -225,23 +245,35 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
                         String inputSits = sits.getText().toString().trim();
                         String inputPrice = price.getText().toString().trim();
 
+                        boolean dataOkay = true;
+
                         if(inputBeginning.equals("")){
                             showError(beginning, "departure location required");
+                            dataOkay = false;
                         }
                         if(inputEnd.equals("")){
                             showError(end, "destination required");
+                            dataOkay = false;
                         }
                         if(inputStartDate.equals("")){
                             showError(startDate, "starting date required");
+                            dataOkay = false;
                         }
                         if(inputEndDate.equals("")){
                             showError(endDate, "ending date required");
+                            dataOkay = false;
                         }
                         if(inputSits.equals("")){
                             showError(sits, "no of sits required");
+                            dataOkay = false;
                         }
                         if(inputPrice.equals("")){
                             showError(price, "price per sit required");
+                            dataOkay = false;
+                        }
+
+                        if(dataOkay){
+
                         }
                     }
                 });
