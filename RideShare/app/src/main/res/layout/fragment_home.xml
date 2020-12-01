@@ -13,6 +13,14 @@
         android:background="@drawable/ic_home_slope"
         android:layout_height="45dp"/>
 
+    <LinearLayout
+        android:id="@+id/loading_layout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_marginTop="-7dp"
+        android:background="@drawable/square_loader"
+        android:visibility="gone"
+        android:layout_height="match_parent"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_marginBottom="2dp"

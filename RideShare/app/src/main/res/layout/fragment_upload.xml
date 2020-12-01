@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_border"
         android:layout_marginEnd="16dp"
         android:paddingBottom="20dp">
 
@@ -23,14 +25,14 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="80dp"
             android:background="@drawable/round_btn"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:elevation="@dimen/cardview_compat_inset_shadow"
             android:text="@string/submit"
             android:textColor="@color/White"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button4k5" />
+            app:layout_constraintTop_toBottomOf="@+id/millegeBtn" />
 
         <TextView
             android:id="@+id/textView10"
@@ -48,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
+            android:id="@+id/licenseImg"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="130dp"
@@ -62,7 +64,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/licenseBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="141dp"
@@ -73,16 +75,16 @@
             android:drawablePadding="5dp"
             android:paddingLeft="5dp"
             android:paddingEnd="5dp"
-            android:text="upload\n car plate \n number"
+            android:text="upload\n your drivers \n license"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_image"
+            app:layout_constraintTop_toBottomOf="@+id/licenseImg"
             tools:ignore="SmallSp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image1"
+            android:id="@+id/prdpImg"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="130dp"
@@ -93,10 +95,10 @@
             app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button4" />
+            app:layout_constraintTop_toBottomOf="@+id/licenseBtn" />
 
         <Button
-            android:id="@+id/button45"
+            android:id="@+id/prdpBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="141dp"
@@ -107,17 +109,18 @@
             android:drawablePadding="5dp"
             android:paddingLeft="5dp"
             android:paddingEnd="5dp"
-            android:text="upload\n car plate \n number"
+            android:text="UPLOAD\n PrDP"
+            android:textAllCaps="false"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_image1"
+            app:layout_constraintTop_toBottomOf="@+id/prdpImg"
             tools:ignore="SmallSp" />
 
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image81"
+            android:id="@+id/millegeImg"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="130dp"
@@ -128,10 +131,10 @@
             app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button4khj5" />
+            app:layout_constraintTop_toBottomOf="@+id/carRegCertificateBtn" />
 
         <Button
-            android:id="@+id/button4k5"
+            android:id="@+id/millegeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="141dp"
@@ -142,16 +145,16 @@
             android:drawablePadding="5dp"
             android:paddingLeft="5dp"
             android:paddingEnd="5dp"
-            android:text="upload\n car plate \n number"
+            android:text="upload\n car millage \n photo"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_image81"
+            app:layout_constraintTop_toBottomOf="@+id/millegeImg"
             tools:ignore="SmallSp" />
 
         <Button
-            android:id="@+id/button4khj5"
+            android:id="@+id/carRegCertificateBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="141dp"
@@ -162,16 +165,16 @@
             android:drawablePadding="5dp"
             android:paddingLeft="5dp"
             android:paddingEnd="5dp"
-            android:text="upload\n car plate \n number"
+            android:text="upload car\n registration \n certificate"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_image8h1"
+            app:layout_constraintTop_toBottomOf="@+id/carRegCertificateImg"
             tools:ignore="SmallSp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image8h1"
+            android:id="@+id/carRegCertificateImg"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="130dp"
@@ -182,10 +185,10 @@
             app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button4kj5" />
+            app:layout_constraintTop_toBottomOf="@+id/carBtn" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_imagej81"
+            android:id="@+id/carImg"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="130dp"
@@ -196,10 +199,10 @@
             app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button45" />
+            app:layout_constraintTop_toBottomOf="@+id/prdpBtn" />
 
         <Button
-            android:id="@+id/button4kj5"
+            android:id="@+id/carBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="141dp"
@@ -210,12 +213,12 @@
             android:drawablePadding="5dp"
             android:paddingLeft="5dp"
             android:paddingEnd="5dp"
-            android:text="upload\n car plate \n number"
+            android:text="upload\n car \n photo"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_imagej81"
+            app:layout_constraintTop_toBottomOf="@+id/carImg"
             tools:ignore="SmallSp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

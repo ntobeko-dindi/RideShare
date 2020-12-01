@@ -1,13 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.MoreFragment">
 
-    <TextView
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="341dp"
+        android:layout_marginEnd="156dp"
+        android:layout_marginBottom="342dp"
+        android:background="@drawable/round_border"
+        android:backgroundTint="@color/transparentWhite"
+        android:drawableStart="@drawable/ic_log_out_01"
+        android:text="@string/logout"
+        android:textColor="@color/Black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@drawable/square_loader"
+        android:elevation="12dp"
+        android:visibility="gone">
 
-</FrameLayout>
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:layout_margin="20dp"
+            android:clickable="false"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

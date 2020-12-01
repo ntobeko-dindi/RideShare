@@ -1,24 +1,14 @@
 package com.xcoding.rideshare;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.shrikanthravi.customnavigationdrawer2.data.MenuItem;
 import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer;
 import com.xcoding.rideshare.fragments.DriverRegistrationFragment;
@@ -36,55 +26,12 @@ public class HomeScreenActivity extends AppCompatActivity {
     SNavigationDrawer sNavigationDrawer;
     Class fragmentClass;
     public static Fragment fragment;
-    FloatingActionButton main,logout;
     Animation open, close, clockwise, anticlockwise;
-    ProgressDialog loadingBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-
-        main = findViewById(R.id.main_fab);
-        logout = findViewById(R.id.logout);
-        loadingBar = new ProgressDialog(HomeScreenActivity.this);
-
-
-
-
-        open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
-        clockwise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_clockwise);
-        anticlockwise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_anticlockwise);
-
-        final int[] isOpen = {0};
-        main.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (isOpen[0] == 1) {
-                    logout.startAnimation(close);
-                    main.setImageDrawable(ContextCompat.getDrawable(HomeScreenActivity.this, R.drawable.ic_baseline_add_24));
-
-                    logout.setClickable(false);
-                    isOpen[0] = 0;
-                } else {
-                    logout.startAnimation(open);
-                    main.setImageDrawable(ContextCompat.getDrawable(HomeScreenActivity.this, R.drawable.ic_baseline_close_24));
-
-                    logout.setClickable(true);
-                    isOpen[0] = 1;
-                }
-            }
-        });
-
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                logout();
-            }
-        });
 
         //Inside onCreate()
 
@@ -199,42 +146,5 @@ public class HomeScreenActivity extends AppCompatActivity {
                 });
             }
         });
-    }
-
-    private void createGroup() {
-        Toast.makeText(HomeScreenActivity.this, "you clicked create group fab", Toast.LENGTH_LONG).show();
-    }
-
-    private void joinGroup() {
-        Toast.makeText(HomeScreenActivity.this, "you clicked join group fab", Toast.LENGTH_LONG).show();
-    }
-    private void logout(){
-        loadingBar.setTitle("Logging you out");
-        loadingBar.setMessage("Please wait...");
-        loadingBar.setCanceledOnTouchOutside(false);
-        loadingBar.show();
-
-        FirebaseAuth.getInstance().signOut();
-        GoogleSignIn.getClient(HomeScreenActivity.this,new GoogleSignInOptions.Builder(
-                GoogleSignInOptions.DEFAULT_SIGN_IN
-        ).build()).signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                startActivity(new Intent(HomeScreenActivity.this,LoginActivity.class));
-            }
-        });
-        loadingBar.cancel();
-    }
-    public String[] getCurrentUserInfo(){
-
-        Intent intent = getIntent();
-        String[] data = new String[4];
-
-        data[0] = "xcoding";
-        data[1] = intent.getStringExtra("lastName");
-        data[2] = intent.getStringExtra("email");
-        data[3] = intent.getStringExtra("cell");
-
-        return data;
     }
 }

@@ -19,13 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginStart="8dp"
+                android:src="@drawable/person_placeholder"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/Black"
                 android:layout_marginTop="16dp"
-                app:srcCompat="@drawable/ic_baseline_person_black"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -87,12 +89,12 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="0dp"
                 android:paddingBottom="8dp"
-                android:drawableStart="@drawable/ic_baseline_local_offer_24"
                 android:drawablePadding="3dp"
                 android:textStyle="bold"
                 android:textSize="14sp"
-                android:text="OFFER RIDE"
-                android:textColor="@color/colorPrimaryDark" />
+                android:text="@string/offer_ride"
+                android:textColor="@color/colorPrimaryDark"
+                app:drawableStartCompat="@drawable/ic_baseline_local_offer_24" />
 
             <TextView
                 android:id="@+id/txt_like"
@@ -103,12 +105,12 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="0dp"
                 android:paddingBottom="8dp"
-                android:drawableStart="@drawable/ic_like"
                 android:drawablePadding="3dp"
                 android:textStyle="bold"
                 android:textSize="14sp"
-                android:text="LIKE"
-                android:textColor="@color/colorPrimaryDark" />
+                android:text="@string/like"
+                android:textColor="@color/colorPrimaryDark"
+                app:drawableStartCompat="@drawable/ic_like" />
             <TextView
                 android:id="@+id/txt_share"
                 android:layout_marginStart="60dp"
@@ -118,12 +120,12 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="0dp"
                 android:paddingBottom="8dp"
-                android:drawableStart="@drawable/ic_baseline_share_12"
                 android:drawablePadding="3dp"
                 android:textStyle="bold"
                 android:textSize="14sp"
-                android:text="SHARE"
-                android:textColor="@color/colorPrimaryDark" />
+                android:text="@string/share"
+                android:textColor="@color/colorPrimaryDark"
+                app:drawableStartCompat="@drawable/ic_baseline_share_12" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

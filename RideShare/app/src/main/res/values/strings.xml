@@ -187,5 +187,9 @@
     <string name="model">Model</string>
     <string name="make">Make</string>
     <string name="upload_images">UPLOAD IMAGES</string>
+    <string name="license_plate_number">License plate number</string>
+    <string name="like">LIKE</string>
+    <string name="offer_ride">OFFER RIDE</string>
+    <string name="share">SHARE</string>
 
 </resources>

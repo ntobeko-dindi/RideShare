@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,12 +19,14 @@ import com.xcoding.rideshare.modals.Rides;
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     RecyclerView recyclerView;
+    LinearLayout linearLayout;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerview);
+        linearLayout = view.findViewById(R.id.loading_layout);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

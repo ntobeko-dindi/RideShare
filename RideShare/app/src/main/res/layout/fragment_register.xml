@@ -11,8 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_border"
         android:layout_marginEnd="16dp"
-        android:paddingBottom="20dp">
+        android:paddingBottom="10dp">
 
         <TextView
             android:id="@+id/textView7"
@@ -29,18 +31,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_change_profile" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pc"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginStart="139dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="140dp"
-            android:src="@drawable/person_placeholder"
+            android:background="@drawable/person_placeholder"
+            app:civ_border_color="@color/White"
+            app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
         <Button
             android:id="@+id/btn_change_profile"
@@ -86,11 +90,14 @@
             android:layout_marginEnd="60dp"
             android:background="@drawable/square_border"
             android:ems="10"
-            android:inputType="textPersonName"
             android:paddingTop="30dp"
+            android:padding="16dp"
+            android:textSize="20sp"
+            android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            tools:ignore="Autofill,LabelFor" />
 
 
         <EditText
@@ -103,6 +110,8 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:paddingTop="30dp"
+            android:padding="16dp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView6"
@@ -170,11 +179,14 @@
             android:layout_marginEnd="60dp"
             android:background="@drawable/square_border"
             android:ems="10"
+            android:padding="16dp"
+            android:textSize="20sp"
             android:paddingTop="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView45"
-            tools:ignore="Autofill,LabelFor" />
+            tools:ignore="Autofill,LabelFor"
+            android:inputType="none" />
 
 
         <Button
@@ -185,7 +197,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="80dp"
             android:background="@drawable/round_btn"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:elevation="@dimen/cardview_compat_inset_shadow"
             android:text="@string/next"
             android:textColor="@color/White"
