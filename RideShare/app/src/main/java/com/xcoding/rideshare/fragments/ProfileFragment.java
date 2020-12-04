@@ -30,19 +30,16 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.xcoding.rideshare.R;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.UUID;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     Button btnUpdateProfile;
     ImageButton editProfilePicture;
-    com.google.android.material.textfield.TextInputEditText fname,lname,email,number;
-    TextView profileName,gender;
+    com.google.android.material.textfield.TextInputEditText fname, lname, email, number;
+    TextView profileName, gender;
     CircleImageView profilePic;
 
     ProgressBar progressBar;
@@ -60,8 +57,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        btnUpdateProfile =  view.findViewById(R.id.btn_update_profile);
-        editProfilePicture =  view.findViewById(R.id.edit_profile_picture);
+        btnUpdateProfile = view.findViewById(R.id.btn_update_profile);
+        editProfilePicture = view.findViewById(R.id.edit_profile_picture);
         fname = view.findViewById(R.id.current_user_first_name);
         lname = view.findViewById(R.id.current_user_last_name);
         email = view.findViewById(R.id.current_user_email);
@@ -82,7 +79,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(intent,SELECT_PHOTO);
+                startActivityForResult(intent, SELECT_PHOTO);
             }
         });
 
@@ -92,22 +89,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    void uploadImage(Uri file){
+    void uploadImage(Uri file) {
 
         layout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         uploadProgress.setVisibility(View.VISIBLE);
-        StorageReference riversRef = mStorageRef.child("Images/"+firebaseAuth.getCurrentUser().getEmail()+"/profilePic");
+        StorageReference riversRef = mStorageRef.child("Images/" + firebaseAuth.getCurrentUser().getUid() + "/profilePic");
 
         riversRef.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                       Toast.makeText(getContext(),"image uploaded",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "image uploaded", Toast.LENGTH_LONG).show();
 
-                       layout.setVisibility(View.GONE);
-                       progressBar.setVisibility(View.GONE);
-                       uploadProgress.setVisibility(View.GONE);
+                        layout.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        uploadProgress.setVisibility(View.GONE);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -116,21 +113,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         layout.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
                         uploadProgress.setVisibility(View.GONE);
-                        Toast.makeText(getContext(),"image uploaded failed",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "image uploaded failed", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
                         double progressPercentage = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                        String p = ((int)progressPercentage) + "%";
+                        String p = ((int) progressPercentage) + "%";
                         uploadProgress.setText(p);
                     }
                 });
     }
 
     @Override
-    public void onClick(View view){
+    public void onClick(View view) {
 
         Context context = getContext();
         CharSequence text = "Update Button Clicked!";
@@ -140,18 +137,18 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         toast.show();
     }
 
-    public void customiseProfile(){
+    public void customiseProfile() {
         try {
             String fullName;
-            if(firebaseAuth.getCurrentUser() != null){
+            if (firebaseAuth.getCurrentUser() != null) {
                 fullName = firebaseAuth.getCurrentUser().getDisplayName();
 
                 char c;
-                for(int x = 0; x < (fullName != null ? fullName.length() : 0); x++) {
+                for (int x = 0; x < (fullName != null ? fullName.length() : 0); x++) {
                     c = fullName.charAt(x);
                     if (Character.isWhitespace(c)) {
-                        fname.setText(fullName.substring(0,x));
-                        lname.setText(fullName.substring(x+1));
+                        fname.setText(fullName.substring(0, x));
+                        lname.setText(fullName.substring(x + 1));
                     }
                 }
                 email.setText(firebaseAuth.getCurrentUser().getEmail());
@@ -163,31 +160,24 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 
             //TODO set text-fields uneditable if a user logs in using google or sign in option
-        }catch (NullPointerException e){
-            Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+        } catch (NullPointerException e) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void getUserFromExternalDB() {
-        //TODO write code that will retrieve user information from the database if the user does not login with facebook or google
-
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == SELECT_PHOTO){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == SELECT_PHOTO) {
+            if (resultCode == Activity.RESULT_OK) {
                 Uri selectImage = data.getData();
                 InputStream inputStream = null;
 
-                try{
+                try {
                     assert selectImage != null;
                     inputStream = getContext().getContentResolver().openInputStream(selectImage);
-                }
-                catch (FileNotFoundException ex){
+                } catch (FileNotFoundException ex) {
                     ex.printStackTrace();
                 }
                 BitmapFactory.decodeStream(inputStream);
@@ -200,11 +190,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        if("UNKNOWN".equals(profileName.getText().toString())){
+        if ("UNKNOWN".equals(profileName.getText().toString())) {
             Bundle extras = getActivity().getIntent().getExtras();
-            if(extras == null){
+            if (extras == null) {
                 Toast.makeText(getContext(),"no extras to display",Toast.LENGTH_LONG).show();
-            }else {
+            } else {
 
                 String fullNames = extras.getString("lastNameFromDB") + " " + extras.getString("firstName");
                 profileName.setText(fullNames);

@@ -117,7 +117,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         uploadProgress.setVisibility(View.VISIBLE);
 
 
-        StorageReference riversRef = mStorageRef.child("Images/"+firebaseAuth.getCurrentUser().getEmail()+"/"+imageName);
+        StorageReference riversRef = mStorageRef.child("Images/"+firebaseAuth.getCurrentUser().getUid()+"/"+imageName);
 
         riversRef.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

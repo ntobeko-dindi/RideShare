@@ -1,27 +1,27 @@
 package com.xcoding.rideshare.modals;
 
 public class ShortDistanceCommuteModal {
-    private String rideSource, beginning, end, startDate, endDate, sits, price;
+    private String time, beginning,destination, startDate, endDate, sits, price;
 
     public ShortDistanceCommuteModal() {
     }
 
-    public ShortDistanceCommuteModal(String rideSource,String beginning, String end, String startDate, String endDate, String sits, String price) {
-        this.rideSource = rideSource;
+    public ShortDistanceCommuteModal(String time,String beginning, String destination, String startDate, String endDate, String sits, String price) {
+        this.time = time;
         this.beginning = beginning;
-        this.end = end;
+        this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
         this.sits = sits;
         this.price = price;
     }
 
-    public String getRideSource() {
-        return rideSource;
+    public String getTime() {
+        return time;
     }
 
-    public void setRideSource(String rideSource) {
-        this.rideSource = rideSource;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getBeginning() {
@@ -32,12 +32,12 @@ public class ShortDistanceCommuteModal {
         this.beginning = beginning;
     }
 
-    public String getEnd() {
-        return end;
+    public String getDestination() {
+        return destination;
     }
 
-    public void setEnd(String end) {
-        this.end = end;
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 
     public String getStartDate() {

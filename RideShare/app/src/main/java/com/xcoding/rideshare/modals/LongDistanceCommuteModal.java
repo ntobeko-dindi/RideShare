@@ -1,17 +1,18 @@
 package com.xcoding.rideshare.modals;
 
 public class LongDistanceCommuteModal {
-    private String rideSource,beginning, end, date, sits, price;
+    private String rideSource,beginning, end, date, sits, price,time;
 
     public LongDistanceCommuteModal() {
     }
 
-    public LongDistanceCommuteModal(String rideSource,String beginning, String end, String date, String sits, String price) {
+    public LongDistanceCommuteModal(String time,String beginning, String end, String date, String sits, String price) {
         this.beginning = beginning;
         this.end = end;
         this.date = date;
         this.sits = sits;
         this.price = price;
+        this.time =time;
     }
 
     public String getRideSource() {
@@ -60,5 +61,13 @@ public class LongDistanceCommuteModal {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

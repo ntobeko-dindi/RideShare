@@ -1,14 +1,24 @@
 package com.xcoding.rideshare;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.shrikanthravi.customnavigationdrawer2.data.MenuItem;
 import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer;
 import com.xcoding.rideshare.fragments.DriverRegistrationFragment;
@@ -18,6 +28,8 @@ import com.xcoding.rideshare.fragments.OfferRideFragment;
 import com.xcoding.rideshare.fragments.ProfileFragment;
 import com.xcoding.rideshare.fragments.RequestRideFragment;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,15 +38,18 @@ public class HomeScreenActivity extends AppCompatActivity {
     SNavigationDrawer sNavigationDrawer;
     Class fragmentClass;
     public static Fragment fragment;
-    Animation open, close, clockwise, anticlockwise;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         //Inside onCreate()
 
+        storageReference = FirebaseStorage.getInstance().getReference().child("Images/").child(firebaseAuth.getCurrentUser().getUid() + "/profilePic.jpeg");
+        readImagesFromStorage();
         sNavigationDrawer = findViewById(R.id.navigationDrawer);
         //Creating a list of menu Items
 
@@ -131,7 +146,6 @@ public class HomeScreenActivity extends AppCompatActivity {
 
                     @Override
                     public void onDrawerOpened() {
-
                     }
 
                     @Override
@@ -144,6 +158,51 @@ public class HomeScreenActivity extends AppCompatActivity {
                         System.out.println("State " + newState);
                     }
                 });
+            }
+        });
+    }
+    private void readImagesFromStorage(){
+        try {
+            final File file = File.createTempFile("profilePic","jpeg");
+            storageReference.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(getApplicationContext(),"image retrieved",Toast.LENGTH_LONG).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        logout();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        logout();
+    }
+
+    private void logout() {
+
+        FirebaseAuth.getInstance().signOut();
+        GoogleSignIn.getClient(this, new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN
+        ).build()).signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
     }

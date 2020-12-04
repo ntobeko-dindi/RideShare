@@ -171,4 +171,29 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if ("".equals(fName.getText().toString())) {
+            Bundle extras = getActivity().getIntent().getExtras();
+            if (extras == null) {
+                Toast.makeText(getContext(),"no extras to display",Toast.LENGTH_LONG).show();
+            } else {
+
+                fName.setText(extras.getString("firstName"));
+                lName.setText(extras.getString("lastNameFromDB"));
+                String sex = extras.getString("gender");
+
+                if(sex.equalsIgnoreCase("male")){
+                    genderMale.setBackgroundResource(R.drawable.gender_male_selected);
+                    genderFemale.setBackgroundResource(R.drawable.gender_female);
+                }else if(sex.equalsIgnoreCase("female")){
+                    genderFemale.setBackgroundResource(R.drawable.gender_female_selected);
+                    genderMale.setBackgroundResource(R.drawable.gender_male);
+                }
+            }
+        }
+    }
+
 }
