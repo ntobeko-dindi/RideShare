@@ -2,6 +2,8 @@ package com.xcoding.rideshare.modals;
 
 import android.util.Patterns;
 
+import javax.crypto.SecretKey;
+
 public class VerifyNewUserDetails {
     private String firstName;
     private String lastName;
@@ -9,6 +11,7 @@ public class VerifyNewUserDetails {
     private String cell;
     private String pass;
     private String gender;
+    private boolean verified;
 
     public VerifyNewUserDetails() {
     }
@@ -19,11 +22,11 @@ public class VerifyNewUserDetails {
             return "firstNameError";
         } else if ("".equals(lastName)) {
             return "lastNameError";
-        } else if ("".equals(email) || !emailOkay()){
+        } else if ("".equals(email) || !emailOkay()) {
             return "emailError";
-        } else if ("".equals(cell) || !isValidPhone()) {
+        } else if ("".equals(cell) /*|| !isValidPhone()*/) {
             return "phoneNumberError";
-        } else if ("".equals(pass) || !passwordFormatOkay()) {
+        } else if ("".equals(pass) /*!passwordFormatOkay()*/) {
             return "passwordError";
         } else {
             return "ok";
@@ -32,19 +35,20 @@ public class VerifyNewUserDetails {
 
     public boolean emailOkay() {
         boolean isValid = false;
-        if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             isValid = true;
         }
         return isValid;
     }
 
     public boolean isValidPhone() {
-        if (cell.length()!=10) {
+        if (cell.length() != 10) {
             return false;
         } else {
             return android.util.Patterns.PHONE.matcher(cell).matches();
         }
     }
+
     public boolean passwordFormatOkay() {
         boolean isOkay = false;
 
@@ -95,6 +99,8 @@ public class VerifyNewUserDetails {
         this.gender = gender;
     }
 
+    public void setVerified(boolean isVerified){this.verified = isVerified;}
+
     //getters
 
 
@@ -116,5 +122,11 @@ public class VerifyNewUserDetails {
 
     public String getGender() {
         return gender;
+    }
+
+    public String getEmail(){return email;}
+
+    public boolean getVerified(){
+        return verified;
     }
 }

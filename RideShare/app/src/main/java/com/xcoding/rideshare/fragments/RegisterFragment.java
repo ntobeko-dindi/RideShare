@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -30,6 +31,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.xcoding.rideshare.R;
 
 import java.util.Calendar;
+
+import javax.xml.transform.Result;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -105,7 +108,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
     void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA_REQUEST_CODE);
+        if(intent.resolveActivity(getActivity().getPackageManager()) != null){
+            startActivityForResult(intent, CAMERA_REQUEST_CODE);
+        }else {
+            Toast.makeText(getContext(),"there is no app that supports this action",Toast.LENGTH_LONG).show();
+        }
     }
 
     private void askCameraPermission() {
@@ -131,8 +138,12 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        //Bitmap image = (Bitmap) data.getExtras().get("data");
-        //Glide.with(this).load(image).into(profilePic);
+
+        if(requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null){
+            Bundle bundle = data.getExtras();
+            Bitmap image = (Bitmap) bundle.get("data");
+            Glide.with(getContext()).asBitmap().load(image).into(profilePic);
+        }
     }
 
     public void customiseProfile() {

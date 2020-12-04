@@ -12,10 +12,44 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/round_border"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/round_border"
         android:paddingBottom="20dp">
 
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:background="@drawable/loader"
+            android:elevation="12dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/carRegCertificateImg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:layout_margin="20dp"
+                android:clickable="false"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/upload_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/_0"
+                android:textColor="@color/White"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/submit"
@@ -73,7 +107,7 @@
             android:background="@drawable/square_border"
             android:drawableStart="@drawable/ic_upload_01"
             android:drawablePadding="5dp"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="upload\n your drivers \n license"
             android:textColor="@color/colorPrimaryDark"
@@ -107,7 +141,7 @@
             android:background="@drawable/square_border"
             android:drawableStart="@drawable/ic_upload_01"
             android:drawablePadding="5dp"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="UPLOAD\n PrDP"
             android:textAllCaps="false"
@@ -143,7 +177,7 @@
             android:background="@drawable/square_border"
             android:drawableStart="@drawable/ic_upload_01"
             android:drawablePadding="5dp"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="upload\n car millage \n photo"
             android:textColor="@color/colorPrimaryDark"
@@ -163,7 +197,7 @@
             android:background="@drawable/square_border"
             android:drawableStart="@drawable/ic_upload_01"
             android:drawablePadding="5dp"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="upload car\n registration \n certificate"
             android:textColor="@color/colorPrimaryDark"
@@ -211,7 +245,7 @@
             android:background="@drawable/square_border"
             android:drawableStart="@drawable/ic_upload_01"
             android:drawablePadding="5dp"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="upload\n car \n photo"
             android:textColor="@color/colorPrimaryDark"

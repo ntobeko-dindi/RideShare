@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -29,7 +31,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.xcoding.rideshare.modals.VerifyNewUserDetails;
 
@@ -43,6 +44,10 @@ public class LoginActivity extends AppCompatActivity {
     TextView textView;
     public static final int GOOGLE_SIGN_IN_CODE = 10005;
 
+    private Intent loginIntent;
+
+    RelativeLayout layout;
+
     ProgressBar progressBar;
     FirebaseAuth firebaseAuth;
 
@@ -55,7 +60,9 @@ public class LoginActivity extends AppCompatActivity {
         sign_up = findViewById(R.id.sign_up_btn);
         login = findViewById(R.id.login_button_id);
         google = findViewById(R.id.google_sign_in);
+        layout = findViewById(R.id.layout_login);
         progressBar = findViewById(R.id.progress_bar);
+        loginIntent = new Intent(getApplicationContext(), HomeScreenActivity.class);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -78,26 +85,27 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final EditText phone;
+                final EditText mail;
                 final EditText password;
 
-                phone = findViewById(R.id.editTextTextPersonName);
+                mail = findViewById(R.id.editTextTextPersonName);
                 password = findViewById(R.id.editTextTextPassword);
 
                 boolean fieldsValid = true;
 
-                final String inputPhone = phone.getText().toString();
+                final String inputEmail = mail.getText().toString();
                 final String inputPassword = password.getText().toString();
 
-                VerifyNewUserDetails checkPhone = new VerifyNewUserDetails();
-                checkPhone.setCell(inputPhone);
+                VerifyNewUserDetails e_mail = new VerifyNewUserDetails();
+                e_mail.setEmail(inputEmail);
 
-                if (!checkPhone.isValidPhone()) {
-                    phone.setError("invalid phone number");
-                    phone.requestFocus();
+                if (!e_mail.emailOkay()) {
+                    mail.setError("invalid phone number");
+                    mail.requestFocus();
                     fieldsValid = false;
-                }else {
-                   phone.setError(null);
+                } else {
+                    mail.setError(null);
+                    mail.clearFocus();
                 }
                 if (inputPassword.equals("")) {
                     password.setError("password required");
@@ -107,52 +115,43 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (fieldsValid) {
                     progressBar.setVisibility(View.VISIBLE);
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-                    Query checkUser = reference.orderByChild("cell").equalTo(inputPhone);
 
-                    checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                    firebaseAuth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-
-                                String passwordFromDB = snapshot.child(inputPhone).child("pass").getValue(String.class);
-
-                                if(inputPassword.equals(passwordFromDB)){
-
-/*                                    String firstNameFromDB = snapshot.child(inputEmail).child("firstName").getValue(String.class);
-                                    String lastNameFromDB = snapshot.child(inputEmail).child("lastName").getValue(String.class);
-                                    String cellNumberFromDB = snapshot.child(inputEmail).child("cell").getValue(String.class);
-                                    String genderFromDB = snapshot.child(inputEmail).child("gender").getValue(String.class);*/
-
-                                    Intent intent = new Intent(getApplicationContext(),HomeScreenActivity.class);
-
-/*                                    intent.putExtra("firstName",firstNameFromDB);
-                                    intent.putExtra("lastNameFromDB",lastNameFromDB);
-                                    intent.putExtra("email",emailFromDB);
-                                    intent.putExtra("cell",cellNumberFromDB);
-                                    intent.putExtra("password",passwordFromDB);
-                                    intent.putExtra("gender",genderFromDB);*/
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                if (firebaseAuth.getCurrentUser().isEmailVerified()) {
+                                   readUserInfo();
+                                } else {
+                                    firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(getApplicationContext(), "please check you emails and verify your account", Toast.LENGTH_LONG).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "account not verified", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "failed to send email verify", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
 
                                     progressBar.setVisibility(GONE);
-
-                                    startActivity(intent);
-                                    finish();
-
-                                }else{
-                                    progressBar.setVisibility(GONE);
-                                    password.setError("Incorrect Password");
-                                    password.requestFocus();
+                                    layout.setVisibility(GONE);
+                                    logout();
                                 }
-                            }else{
-                                progressBar.setVisibility(GONE);
-                                phone.setError("User Does Not Exist!");
-                                phone.requestFocus();
                             }
                         }
-
+                    }).addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                        public void onFailure(@NonNull Exception e) {
+                            mail.setError("");
+                            mail.requestFocus();
+                            password.setError("incorrect password or password");
+                            password.requestFocus();
 
+                            progressBar.setVisibility(View.INVISIBLE);
+                            layout.setVisibility(View.INVISIBLE);
                         }
                     });
                 }
@@ -160,7 +159,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         //implementing facebook sign up in the login page
-        
+
         //implementing google sing in option on a login page
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("298659425253-70hna5d8fp3mjsp2vog2u80hlfpsvkuo.apps.googleusercontent.com")
@@ -173,6 +172,8 @@ public class LoginActivity extends AppCompatActivity {
             //Toast.makeText(this,"user is already logged in",Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, HomeScreenActivity.class));
             finish();
+        } else {
+            Toast.makeText(getApplicationContext(), "signed out", Toast.LENGTH_LONG).show();
         }
         google.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,4 +226,50 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        GoogleSignIn.getClient(this, new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN
+        ).build()).signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+            }
+        });
+    }
+
+    private void readUserInfo() {
+
+        final String userID = firebaseAuth.getCurrentUser().getUid();
+        final String emailFromDB = firebaseAuth.getCurrentUser().getEmail();
+
+        Toast.makeText(getApplicationContext(),userID,Toast.LENGTH_LONG).show();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(userID);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String firstNameFromDB = snapshot.child("firstName").getValue(String.class);
+                String lastNameFromDB = snapshot.child("lastName").getValue(String.class);
+                String cellNumberFromDB = snapshot.child("cell").getValue(String.class);
+                String genderFromDB = snapshot.child("gender").getValue(String.class);
+
+                loginIntent.putExtra("firstName", firstNameFromDB);
+                loginIntent.putExtra("lastNameFromDB", lastNameFromDB);
+                loginIntent.putExtra("email", emailFromDB);
+                loginIntent.putExtra("cell", cellNumberFromDB);
+                loginIntent.putExtra("gender", genderFromDB);
+
+                startActivity(loginIntent);
+                finish();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

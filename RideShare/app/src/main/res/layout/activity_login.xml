@@ -43,11 +43,11 @@
             android:layout_marginRight="32dp"
             android:autofillHints=""
             android:background="@drawable/round_border"
-            android:drawableStart="@drawable/ic_baseline_phone_24"
+            android:drawableStart="@drawable/ic_baseline_email_24"
             android:drawablePadding="16dp"
             android:ems="10"
-            android:hint="@string/cell_number"
-            android:inputType="phone"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
             android:padding="16dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -183,6 +183,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
+            android:id="@+id/layout_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/loader"

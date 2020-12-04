@@ -13,15 +13,28 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.hbb20.CountryCodePicker;
+import com.xcoding.rideshare.modals.PasswordEncryption;
 import com.xcoding.rideshare.modals.VerifyNewUserDetails;
+
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -34,6 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText fname, lname, email, phoneNumber, password, cPassword;
     RadioGroup radioGroup;
     RadioButton gender;
+    CountryCodePicker countryCodePicker;
 
     ProgressBar progressBar;
 
@@ -59,6 +73,8 @@ public class SignUpActivity extends AppCompatActivity {
         cPassword = findViewById(R.id.signup_password_confirm_id);
         radioGroup = findViewById(R.id.radioGroup);
         progressBar = findViewById(R.id.progress_bar);
+        countryCodePicker = findViewById(R.id.ccp);
+        countryCodePicker.registerCarrierNumberEditText(phoneNumber);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference(USER);
@@ -86,7 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
             String firstName = fname.getText().toString().trim();
             String lastName = lname.getText().toString().trim();
             String mail = this.email.getText().toString().trim();
-            String cell = phoneNumber.getText().toString().trim();
+            String cell = countryCodePicker.getFullNumberWithPlus();
             String pass = password.getText().toString().trim();
             String cPass = cPassword.getText().toString().trim();
 
@@ -103,6 +119,7 @@ public class SignUpActivity extends AppCompatActivity {
                 newUser.setEmail(mail);
                 newUser.setCell(cell);
                 newUser.setPass(pass);
+                newUser.setVerified(false);
 
                 String userCredentials = newUser.validate();
 
@@ -149,18 +166,35 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
 
-                            assert user != null;
-                            String keyId = user.getUid();
-                            mDatabase.child(keyId).setValue(newUser);
-                            progressBar.setVisibility(View.GONE);
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                            finish();
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getApplicationContext(),"Verification Email Sent", LENGTH_LONG).show();
+
+                                    String keyId = user.getUid();
+                                    mDatabase.child(keyId).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            logout();
+                                        }
+                                    });
+                                    progressBar.setVisibility(View.GONE);
+
+                                    Intent intent = new Intent(getApplicationContext(), VerifyPhoneNumberActivity.class);
+                                    intent.putExtra("phoneNumber",countryCodePicker.getFullNumberWithPlus());
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(),"Invalid Email..",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         } else {
-                            // If sign in fails, display a message to the user.
                             progressBar.setVisibility(View.GONE);
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             makeText(getApplicationContext(), "Authentication Failed", LENGTH_LONG).show();
@@ -170,6 +204,19 @@ public class SignUpActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+
+    private void logout() {
+
+        FirebaseAuth.getInstance().signOut();
+        GoogleSignIn.getClient(this, new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN
+        ).build()).signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+            }
+        });
     }
 
 }

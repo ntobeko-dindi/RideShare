@@ -8,12 +8,12 @@
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:contentDescription="@string/offer_a_ride"
         android:scaleType="center"
         android:src="@drawable/ford_mustang_car_215784"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/offer_a_ride" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_long_distance_id"
@@ -39,9 +39,9 @@
         android:background="@drawable/round_border"
         android:backgroundTint="@color/colorPrimaryDark"
         android:text="@string/daily_commute"
+        android:textColor="@color/White"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:textColor="@color/White"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.808"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,11 +60,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/rideshare"
             android:gravity="center|center_horizontal"
+            android:text="@string/rideshare"
+            android:textColor="@color/White"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/White"/>
+            android:textStyle="bold" />
     </RelativeLayout>
 
 

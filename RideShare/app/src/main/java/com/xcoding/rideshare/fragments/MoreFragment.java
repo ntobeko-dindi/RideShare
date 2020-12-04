@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.xcoding.rideshare.LoginActivity;
 import com.xcoding.rideshare.R;
 
-public class MoreFragment extends Fragment implements View.OnClickListener{
+public class MoreFragment extends Fragment implements View.OnClickListener {
 
     Button logout;
     ProgressBar progressBar;
@@ -29,6 +29,7 @@ public class MoreFragment extends Fragment implements View.OnClickListener{
     public MoreFragment() {
         // Required empty public constructor
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_more, container, false);
@@ -44,21 +45,24 @@ public class MoreFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btnLogout){
+        if (v.getId() == R.id.btnLogout) {
             logout();
         }
     }
-    private void logout(){
+
+    private void logout() {
 
         relativeLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         FirebaseAuth.getInstance().signOut();
-        GoogleSignIn.getClient(getActivity(),new GoogleSignInOptions.Builder(
+        GoogleSignIn.getClient(getActivity(), new GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN
         ).build()).signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                startActivity(new Intent(getContext(), LoginActivity.class));
+                Intent intent = new Intent(getContext(),LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
     }

@@ -8,6 +8,38 @@
     android:theme="@style/AppTheme2">
 
 
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/square_loader"
+        android:elevation="12dp"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:layout_margin="20dp"
+            android:clickable="false"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/upload_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/White"
+            android:text="@string/_0"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            />
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,7 +76,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/profile_username"
+                android:id="@+id/gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/profile_name"
@@ -167,9 +199,6 @@
         </LinearLayout>
 
         <ScrollView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_height="wrap_content"
             android:background="@color/White"
             android:layout_width="match_parent">
@@ -207,13 +236,13 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/current_user_last_name"
                         android:layout_width="300dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/Black"
-                        android:inputType="text"
-                        android:drawableStart="@drawable/ic_baseline_person_black"
+                        android:layout_height="match_parent"
                         android:backgroundTint="@color/colorWhite"
+                        android:drawableStart="@drawable/ic_baseline_person_black"
                         android:drawablePadding="10dp"
-                        android:text="@string/unknown" />
+                        android:inputType="text"
+                        android:text="@string/unknown"
+                        android:textColor="@color/Black" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

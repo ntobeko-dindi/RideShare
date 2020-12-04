@@ -4,53 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ForgotPassword">
+    tools:context=".VerifyPhoneNumberActivity">
 
 
     <ImageView
-        android:id="@+id/email_forgot_password_pic"
+        android:id="@+id/verify_phone_pic"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_marginStart="160dp"
         android:layout_marginTop="137dp"
         android:layout_marginEnd="161dp"
-        android:src="@drawable/ic_forgot_password"
+        android:src="@drawable/ic_baseline_verified_user_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
     <EditText
-        android:id="@+id/email_forgot_txt"
+        android:id="@+id/otp_txt"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="55dp"
         android:layout_marginTop="19dp"
         android:layout_marginEnd="56dp"
         android:autofillHints=""
-        android:drawableStart="@drawable/ic_baseline_email_24"
+        android:drawableStart="@drawable/ic_baseline_verified_user_24"
         android:drawablePadding="16dp"
         android:ems="10"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
+        android:hint="@string/enter_otp"
+        android:inputType="number"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
-        android:id="@+id/email_forgot_password_btn"
+        android:id="@+id/phone_verification_btn"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="55dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="56dp"
         android:background="@drawable/round_btn"
-        android:text="@string/send_verification_email"
+        android:text="@string/verify"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_forgot_txt" />
+        app:layout_constraintTop_toBottomOf="@+id/otp_txt" />
 
     <TextView
         android:id="@+id/textView4"
@@ -59,23 +59,23 @@
         android:layout_marginStart="64dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="61dp"
-        android:text="@string/registered_account_email"
+        android:text="@string/enter_the_otp"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_forgot_password_pic" />
+        app:layout_constraintTop_toBottomOf="@+id/verify_phone_pic" />
 
     <ImageView
-        android:id="@+id/back_to_sign_in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="39dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="312dp"
-        android:layout_marginBottom="201dp"
-        android:src="@drawable/ic_baseline_arrow_back_24"
+        android:id="@+id/cancel"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="367dp"
+        android:layout_marginBottom="213dp"
+        android:src="@drawable/ic_cancel_03"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,21 +83,22 @@
         tools:ignore="ContentDescription" />
 
     <RelativeLayout
-        android:id="@+id/forgot_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/loader"
+        android:id="@+id/loading_layout_verify"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/square_loader"
         android:elevation="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/email_forgot_password_btn"
-        app:layout_constraintEnd_toEndOf="@+id/email_forgot_txt"
-        app:layout_constraintStart_toStartOf="@+id/email_forgot_txt"
-        app:layout_constraintTop_toTopOf="@+id/email_forgot_txt">
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ProgressBar
             android:id="@+id/progress_bar"
             style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:layout_margin="20dp"
             android:clickable="false"

@@ -81,4 +81,9 @@ public class RequestRideFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View view) {
     }
+
+    public boolean validateFields(){
+
+        return true;
+    }
 }

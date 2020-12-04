@@ -21,9 +21,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/loader"
             android:elevation="12dp"
-            app:layout_constraintBottom_toBottomOf="@+id/signup_phonenumber_id"
-            app:layout_constraintEnd_toEndOf="@+id/signup_phonenumber_id"
-            app:layout_constraintStart_toStartOf="@+id/signup_phonenumber_id"
+            app:layout_constraintBottom_toBottomOf="@+id/phone_linearLayout"
+            app:layout_constraintEnd_toEndOf="@+id/phone_linearLayout"
+            app:layout_constraintStart_toStartOf="@+id/phone_linearLayout"
             app:layout_constraintTop_toBottomOf="@+id/signup_email_id">
 
             <ProgressBar
@@ -62,8 +62,8 @@
             android:id="@+id/signup_firstname_id"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="55dp"
             android:autofillHints=""
             android:drawableStart="@drawable/ic_baseline_person_black"
             android:drawablePadding="16dp"
@@ -79,8 +79,8 @@
             android:id="@+id/signup_lastname_id"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="55dp"
             android:autofillHints=""
             android:drawableStart="@drawable/ic_baseline_person_black"
             android:drawablePadding="16dp"
@@ -96,8 +96,8 @@
             android:id="@+id/signup_email_id"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="55dp"
             android:autofillHints=""
             android:drawableStart="@drawable/ic_baseline_email_24"
             android:drawablePadding="16dp"
@@ -109,29 +109,48 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signup_lastname_id" />
 
-        <EditText
-            android:id="@+id/signup_phonenumber_id"
+        <LinearLayout
+            android:id="@+id/phone_linearLayout"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:autofillHints=""
-            android:drawableStart="@drawable/ic_baseline_phone_24"
-            android:drawablePadding="16dp"
-            android:ems="10"
-            android:hint="@string/cell_phone_number"
-            android:inputType="phone"
-            android:padding="16dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="55dp"
+            android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signup_email_id" />
+            app:layout_constraintTop_toBottomOf="@+id/signup_email_id">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/ccp"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                app:ccp_defaultNameCode="ZA"
+                tools:ignore="RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/signup_phonenumber_id"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:ems="10"
+                android:maxLength="9"
+                android:hint="@string/phone_number_format"
+                android:inputType="phone"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/signup_password_id"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="55dp"
             android:autofillHints=""
             android:drawableStart="@drawable/ic_baseline_lock_24"
             android:drawablePadding="16dp"
@@ -141,14 +160,14 @@
             android:padding="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signup_phonenumber_id" />
+            app:layout_constraintTop_toBottomOf="@+id/phone_linearLayout" />
 
         <EditText
             android:id="@+id/signup_password_confirm_id"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="55dp"
             android:autofillHints=""
             android:drawableStart="@drawable/ic_baseline_lock_24"
             android:drawablePadding="16dp"
@@ -165,11 +184,10 @@
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="78dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="79dp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/sign_up_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signup_password_confirm_id">
@@ -219,14 +237,12 @@
             android:id="@+id/sign_up_btn"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="40dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="55dp"
             android:background="@drawable/round_btn"
             android:text="@string/create_account"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/back_to_sign_in"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
