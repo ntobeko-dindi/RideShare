@@ -126,7 +126,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_baseline_rate_review_24"
+                        android:src="@drawable/ic_baseline_directions_car_24"
                         android:contentDescription="@string/dummy" />
 
                     <TextView
@@ -136,7 +136,7 @@
                         android:layout_centerInParent="true"
                         android:textColor="@color/White"
                         android:includeFontPadding="false"
-                        android:text="@string/_12344"
+                        android:text="@string/_0_"
                         android:textSize="20sp" />
 
                     <TextView
@@ -147,7 +147,7 @@
                         android:layout_below="@+id/card1text1"
                         android:layout_centerHorizontal="true"
                         android:includeFontPadding="false"
-                        android:text="@string/description"
+                        android:text="@string/rides"
                         android:textSize="14sp" />
 
                 </RelativeLayout>
@@ -169,7 +169,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_baseline_chat_24"
+                        android:src="@drawable/ic_baseline_attach_money_24"
                         android:contentDescription="@string/dummy" />
 
                     <TextView
@@ -179,7 +179,7 @@
                         android:textColor="@color/White"
                         android:layout_centerInParent="true"
                         android:includeFontPadding="false"
-                        android:text="@string/_12344"
+                        android:text="@string/r0"
                         android:textSize="20sp" />
 
                     <TextView
@@ -190,7 +190,7 @@
                         android:textColor="@color/White"
                         android:layout_centerHorizontal="true"
                         android:includeFontPadding="false"
-                        android:text="@string/description"
+                        android:text="@string/profits"
                         android:textSize="14sp" />
 
                 </RelativeLayout>

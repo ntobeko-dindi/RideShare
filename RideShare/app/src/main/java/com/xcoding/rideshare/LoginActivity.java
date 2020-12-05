@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -114,46 +117,60 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (fieldsValid) {
-                    progressBar.setVisibility(View.VISIBLE);
 
-                    firebaseAuth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                if (firebaseAuth.getCurrentUser().isEmailVerified()) {
-                                   readUserInfo();
-                                } else {
-                                    firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(getApplicationContext(), "please check you emails and verify your account", Toast.LENGTH_LONG).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), "account not verified", Toast.LENGTH_SHORT).show();
-                                            Toast.makeText(getApplicationContext(), "failed to send email verify", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                    boolean connected = false;
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                            connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                        connected = true;
+                    } else
+                        connected = false;
 
-                                    progressBar.setVisibility(GONE);
-                                    layout.setVisibility(GONE);
-                                    logout();
+                    if (connected) {
+                        progressBar.setVisibility(View.VISIBLE);
+
+                        firebaseAuth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    if (firebaseAuth.getCurrentUser().isEmailVerified()) {
+                                        readUserInfo();
+                                    } else {
+                                        firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getApplicationContext(), "please check you emails and verify your account", Toast.LENGTH_LONG).show();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getApplicationContext(), "account not verified", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getApplicationContext(), "failed to send email verify", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                                        progressBar.setVisibility(GONE);
+                                        layout.setVisibility(GONE);
+                                        logout();
+                                    }
                                 }
                             }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            mail.setError("");
-                            mail.requestFocus();
-                            password.setError("incorrect password or password");
-                            password.requestFocus();
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
 
-                            progressBar.setVisibility(View.INVISIBLE);
-                            layout.setVisibility(View.INVISIBLE);
-                        }
-                    });
+                                mail.setError("");
+                                mail.requestFocus();
+                                password.setError("incorrect password or password");
+                                password.requestFocus();
+
+                                progressBar.setVisibility(View.INVISIBLE);
+                                layout.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                    }else{
+                        Toast.makeText(getApplicationContext(),"no internet connection",Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -242,8 +259,6 @@ public class LoginActivity extends AppCompatActivity {
 
         final String userID = firebaseAuth.getCurrentUser().getUid();
         final String emailFromDB = firebaseAuth.getCurrentUser().getEmail();
-
-        Toast.makeText(getApplicationContext(),userID,Toast.LENGTH_LONG).show();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(userID);
 

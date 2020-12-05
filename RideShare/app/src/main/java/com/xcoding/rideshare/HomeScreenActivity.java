@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -16,6 +15,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -39,17 +43,18 @@ public class HomeScreenActivity extends AppCompatActivity {
     Class fragmentClass;
     public static Fragment fragment;
     private StorageReference storageReference;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         //Inside onCreate()
 
         storageReference = FirebaseStorage.getInstance().getReference().child("Images/").child(firebaseAuth.getCurrentUser().getUid() + "/profilePic.jpeg");
-        readImagesFromStorage();
+
         sNavigationDrawer = findViewById(R.id.navigationDrawer);
         //Creating a list of menu Items
 
@@ -161,35 +166,24 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
     }
-    private void readImagesFromStorage(){
-        try {
-            final File file = File.createTempFile("profilePic","jpeg");
-            storageReference.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getApplicationContext(),"image retrieved",Toast.LENGTH_LONG).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-        }
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        logout();
+        //logout();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        logout();
+        //logout();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(getApplicationContext(),"reading user information",Toast.LENGTH_LONG).show();
+        readUserInfo();
     }
 
     private void logout() {
@@ -206,4 +200,35 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void readUserInfo() {
+
+        final String userID = firebaseAuth.getCurrentUser().getUid();
+        final String emailFromDB = firebaseAuth.getCurrentUser().getEmail();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(userID);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String firstNameFromDB = snapshot.child("firstName").getValue(String.class);
+                String lastNameFromDB = snapshot.child("lastName").getValue(String.class);
+                String cellNumberFromDB = snapshot.child("cell").getValue(String.class);
+                String genderFromDB = snapshot.child("gender").getValue(String.class);
+
+                getIntent().putExtra("firstName", firstNameFromDB);
+                getIntent().putExtra("lastNameFromDB", lastNameFromDB);
+                getIntent().putExtra("email", emailFromDB);
+                getIntent().putExtra("cell", cellNumberFromDB);
+                getIntent().putExtra("gender", genderFromDB);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

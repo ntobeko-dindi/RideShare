@@ -23,13 +23,16 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.xcoding.rideshare.R;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -48,8 +51,9 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
 
     private String imageName;
 
-    CircleImageView driverLicence,prdp,carPhoto,carRegCert,millagePic;
-    Button driverLicenceBTN,prdpBTN,carPhotoBTN,carRegCertBTN,millagePicBTN;
+    CircleImageView driverLicence, prdp, carPhoto, carRegCert, millagePic;
+    Button driverLicenceBTN, prdpBTN, carPhotoBTN, carRegCertBTN, millagePicBTN;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,7 +89,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.licenseBtn:
                 selectedBtn = 1;
                 imageName = "license";
@@ -110,20 +114,20 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         openLocalStorage();
     }
 
-    void uploadImage(Uri file){
+    void uploadImage(Uri file) {
 
         layout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         uploadProgress.setVisibility(View.VISIBLE);
 
 
-        StorageReference riversRef = mStorageRef.child("Images/"+firebaseAuth.getCurrentUser().getUid()+"/"+imageName);
+        StorageReference riversRef = mStorageRef.child("Images/" + firebaseAuth.getCurrentUser().getUid() + "/" + imageName);
 
         riversRef.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getContext(),"image uploaded",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "image uploaded", Toast.LENGTH_LONG).show();
 
                         layout.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
@@ -136,45 +140,44 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
                         layout.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
                         uploadProgress.setVisibility(View.GONE);
-                        Toast.makeText(getContext(),"image uploaded failed",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "image uploaded failed", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
                         double progressPercentage = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                        String p = ((int)progressPercentage) + "%";
+                        String p = ((int) progressPercentage) + "%";
                         uploadProgress.setText(p);
                     }
 
                 });
     }
 
-    void openLocalStorage(){
+    void openLocalStorage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        startActivityForResult(intent,SELECT_PHOTO);
+        startActivityForResult(intent, SELECT_PHOTO);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == SELECT_PHOTO){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == SELECT_PHOTO) {
+            if (resultCode == Activity.RESULT_OK) {
                 Uri selectImage = data.getData();
                 InputStream inputStream = null;
 
-                try{
+                try {
                     assert selectImage != null;
                     inputStream = getContext().getContentResolver().openInputStream(selectImage);
-                }
-                catch (FileNotFoundException ex){
+                } catch (FileNotFoundException ex) {
                     ex.printStackTrace();
                 }
                 BitmapFactory.decodeStream(inputStream);
 
-                switch (selectedBtn){
+                switch (selectedBtn) {
                     case 1:
                         Glide.with(this).load(String.valueOf(selectImage)).into(driverLicence);
                         break;
@@ -194,6 +197,132 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
 
                 uploadImage(selectImage);
             }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getUserLicenseFromDB();
+        getUserPrDPFromDB();
+        getUserCarPhotoFromDB();
+        getUserCarCertificateFromDB();
+        getUserCarMillageFromDB();
+
+    }
+
+    private void getUserLicenseFromDB() {
+        String userID = firebaseAuth.getCurrentUser().getUid();
+        StorageReference riversRef = mStorageRef.child("Images/" + userID + "/license");
+        try {
+            final File localFile = File.createTempFile("license", "*");
+            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    if (getActivity() != null) {
+                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(driverLicence);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void getUserPrDPFromDB() {
+        String userID = firebaseAuth.getCurrentUser().getUid();
+        StorageReference riversRef = mStorageRef.child("Images/" + userID + "/pdp");
+        try {
+            final File localFile = File.createTempFile("pdp", "*");
+            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    if (getActivity() != null) {
+                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(prdp);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void getUserCarPhotoFromDB() {
+        String userID = firebaseAuth.getCurrentUser().getUid();
+        StorageReference riversRef = mStorageRef.child("Images/" + userID + "/car");
+        try {
+            final File localFile = File.createTempFile("car", "*");
+            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    if (getActivity() != null) {
+                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(carPhoto);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void getUserCarCertificateFromDB() {
+        String userID = firebaseAuth.getCurrentUser().getUid();
+        StorageReference riversRef = mStorageRef.child("Images/" + userID + "/carRegCertificate");
+        try {
+            final File localFile = File.createTempFile("carRegCertificate", "*");
+            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    if (getActivity() != null) {
+                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(carRegCert);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void getUserCarMillageFromDB() {
+        String userID = firebaseAuth.getCurrentUser().getUid();
+        StorageReference riversRef = mStorageRef.child("Images/" + userID + "/millage");
+        try {
+            final File localFile = File.createTempFile("millage", "*");
+            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    if (getActivity() != null) {
+                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(millagePic);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
         }
     }
 }

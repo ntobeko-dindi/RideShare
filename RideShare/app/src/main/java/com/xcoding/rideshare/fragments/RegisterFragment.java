@@ -15,8 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +29,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.xcoding.rideshare.R;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.xml.transform.Result;
 
@@ -43,7 +56,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     EditText fName, lName, dob;
     Button genderFemale, genderMale, takePicture;
     DatePickerDialog.OnDateSetListener setListener;
+    String currentPhotoPath;
 
+
+    private StorageReference mStorageRef;
+    private FirebaseAuth firebaseAuth;
     CircleImageView profilePic;
 
     @Override
@@ -58,10 +75,15 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         takePicture = view.findViewById(R.id.btn_change_profile);
         profilePic = view.findViewById(R.id.profile_pc);
         dob = view.findViewById(R.id.dob_id);
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+
 
         takePicture.setOnClickListener(this);
         genderMale.setOnClickListener(this);
         genderFemale.setOnClickListener(this);
+
+        getUserProfilePictureFromDB();
 
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
@@ -106,20 +128,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intent.resolveActivity(getActivity().getPackageManager()) != null){
-            startActivityForResult(intent, CAMERA_REQUEST_CODE);
-        }else {
-            Toast.makeText(getContext(),"there is no app that supports this action",Toast.LENGTH_LONG).show();
-        }
-    }
-
     private void askCameraPermission() {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) getContext(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
         } else {
-            openCamera();
+            dispatchTakePictureIntent();
         }
     }
 
@@ -127,7 +140,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openCamera();
+                dispatchTakePictureIntent();
             } else {
                 Toast.makeText(getContext(), "permission required", Toast.LENGTH_SHORT).show();
             }
@@ -142,8 +155,76 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         if(requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null){
             Bundle bundle = data.getExtras();
             Bitmap image = (Bitmap) bundle.get("data");
+
             Glide.with(getContext()).asBitmap().load(image).into(profilePic);
+
+            File f = new File(currentPhotoPath);
+            Uri uri = Uri.fromFile(f);
+            uploadImage(uri);
+
         }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                "*",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getContext(),
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+            }
+        }
+    }
+
+
+
+
+
+
+    void uploadImage(Uri file){
+
+        StorageReference riversRef = mStorageRef.child("Images/"+firebaseAuth.getCurrentUser().getUid()+"/profilePic");
+
+        riversRef.putFile(file)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getContext(),"image uploaded",Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getContext(),"image uploaded failed",Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     public void customiseProfile() {
@@ -172,6 +253,29 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void getUserProfilePictureFromDB() {
+        String userID = firebaseAuth.getCurrentUser().getUid();
+        StorageReference riversRef = mStorageRef.child("Images/" + userID + "/profilePic");
+        try {
+            final File localFile = File.createTempFile("profilePic","*");
+            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                   if(getActivity() != null){
+                       Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(profilePic);
+                   }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(getContext(),"IOException",Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -196,4 +300,27 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ("".equals(fName.getText().toString())) {
+            Bundle extras = getActivity().getIntent().getExtras();
+            if (extras == null) {
+                Toast.makeText(getContext(),"no extras to display",Toast.LENGTH_LONG).show();
+            } else {
+
+                fName.setText(extras.getString("firstName"));
+                lName.setText(extras.getString("lastNameFromDB"));
+                String sex = extras.getString("gender");
+
+                if(sex.equalsIgnoreCase("male")){
+                    genderMale.setBackgroundResource(R.drawable.gender_male_selected);
+                    genderFemale.setBackgroundResource(R.drawable.gender_female);
+                }else if(sex.equalsIgnoreCase("female")){
+                    genderFemale.setBackgroundResource(R.drawable.gender_female_selected);
+                    genderMale.setBackgroundResource(R.drawable.gender_male);
+                }
+            }
+        }
+    }
 }

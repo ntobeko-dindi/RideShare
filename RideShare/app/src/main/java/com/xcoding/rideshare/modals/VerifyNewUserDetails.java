@@ -116,10 +116,6 @@ public class VerifyNewUserDetails {
         return cell;
     }
 
-    public String getPass() {
-        return pass;
-    }
-
     public String getGender() {
         return gender;
     }

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "298659425253-8s5mp315j2pu45v6dilhtthb7onf3dns.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.xcoding.rideshare",
+            "certificate_hash": "c9bea0b332ddcb382fe27e66489aaab29578ae27"
+          }
+        },
+        {
           "client_id": "298659425253-70hna5d8fp3mjsp2vog2u80hlfpsvkuo.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "298659425253-70hna5d8fp3mjsp2vog2u80hlfpsvkuo.apps.googleusercontent.com",
+              "client_id": "298659425253-0mccsrlvmc5rsdv893dfuuv2puapjinp.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

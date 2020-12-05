@@ -196,5 +196,9 @@
     <string name="enter_otp">Enter OTP</string>
     <string name="_0">0%</string>
     <string name="phone_number_format">61707153</string>
+    <string name="r0">R0</string>
+    <string name="profits">profits</string>
+    <string name="_0_">0</string>
+    <string name="rides">rides</string>
 
 </resources>
