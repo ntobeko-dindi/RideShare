@@ -69,7 +69,7 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
         } else {
             String phone = extras.getString("phoneNumber");
             Toast.makeText(getApplicationContext(),phone,Toast.LENGTH_LONG).show();
-            sendOTPCode("+270611808161");
+            sendOTPCode(phone);
         }
     }
 

@@ -11,7 +11,7 @@ public class VerifyNewUserDetails {
     private String cell;
     private String pass;
     private String gender;
-    private boolean verified;
+    private boolean isDriver;
 
     public VerifyNewUserDetails() {
     }
@@ -99,7 +99,9 @@ public class VerifyNewUserDetails {
         this.gender = gender;
     }
 
-    public void setVerified(boolean isVerified){this.verified = isVerified;}
+    public void setDriver(boolean driver) {
+        isDriver = driver;
+    }
 
     //getters
 
@@ -122,7 +124,7 @@ public class VerifyNewUserDetails {
 
     public String getEmail(){return email;}
 
-    public boolean getVerified(){
-        return verified;
+    public boolean isDriver() {
+        return isDriver;
     }
 }

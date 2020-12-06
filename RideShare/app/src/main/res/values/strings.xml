@@ -200,5 +200,6 @@
     <string name="profits">profits</string>
     <string name="_0_">0</string>
     <string name="rides">rides</string>
+    <string name="send_password_reset_email">send password reset email</string>
 
 </resources>

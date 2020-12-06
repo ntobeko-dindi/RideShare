@@ -134,7 +134,8 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     if (firebaseAuth.getCurrentUser().isEmailVerified()) {
-                                        readUserInfo();
+                                        startActivity(loginIntent);
+                                        finish();
                                     } else {
                                         firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
@@ -255,7 +256,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void readUserInfo() {
+
+   /* private void readUserInfo() {
 
         final String userID = firebaseAuth.getCurrentUser().getUid();
         final String emailFromDB = firebaseAuth.getCurrentUser().getEmail();
@@ -284,7 +286,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
-    }
+        });*/
+    //}
 
 }

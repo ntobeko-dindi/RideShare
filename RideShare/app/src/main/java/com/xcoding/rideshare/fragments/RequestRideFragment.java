@@ -68,7 +68,7 @@ public class RequestRideFragment extends Fragment implements View.OnClickListene
         submitRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validateFields()){
+                if (validateFields()) {
                     Toast.makeText(getContext(), "Searching", Toast.LENGTH_LONG).show();
                 }
             }
@@ -84,22 +84,22 @@ public class RequestRideFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
     }
 
-    public boolean validateFields(){
+    public boolean validateFields() {
         boolean fieldsOkay = true;
 
-        if (requesterLocation.getText().toString().trim().isEmpty()){
-            requesterLocation.setError("field required");
+        if (requesterLocation.getText().toString().trim().isEmpty()) {
+            requesterLocation.setError("field/s required");
             requesterLocation.requestFocus();
             fieldsOkay = false;
         }
-        if (requesterDepartureDate.getText().toString().trim().isEmpty()){
-            requesterDepartureDate.setError("field required");
-            requesterDepartureDate.requestFocus();
+        if (requesterDestination.getText().toString().trim().isEmpty()) {
+            requesterDestination.setError("field/s required");
+            requesterDestination.requestFocus();
             fieldsOkay = false;
         }
-        if (requesterDestination.getText().toString().trim().isEmpty()){
-            requesterDestination.setError("field required");
-            requesterDestination.requestFocus();
+        if (requesterDepartureDate.getText().toString().trim().isEmpty()) {
+            requesterDepartureDate.setError("field/s required");
+            requesterDepartureDate.requestFocus();
             fieldsOkay = false;
         }
         return fieldsOkay;

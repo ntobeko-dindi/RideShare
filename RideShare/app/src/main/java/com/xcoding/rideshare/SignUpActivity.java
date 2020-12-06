@@ -119,7 +119,7 @@ public class SignUpActivity extends AppCompatActivity {
                 newUser.setEmail(mail);
                 newUser.setCell(cell);
                 newUser.setPass(pass);
-                newUser.setVerified(false);
+                newUser.setDriver(false);
 
                 String userCredentials = newUser.validate();
 

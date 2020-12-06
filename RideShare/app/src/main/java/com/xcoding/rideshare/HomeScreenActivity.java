@@ -184,6 +184,14 @@ public class HomeScreenActivity extends AppCompatActivity {
         super.onResume();
         Toast.makeText(getApplicationContext(),"reading user information",Toast.LENGTH_LONG).show();
         readUserInfo();
+        readUserCarInfo();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        readUserInfo();
+        readUserCarInfo();
     }
 
     private void logout() {
@@ -215,13 +223,38 @@ public class HomeScreenActivity extends AppCompatActivity {
                 String lastNameFromDB = snapshot.child("lastName").getValue(String.class);
                 String cellNumberFromDB = snapshot.child("cell").getValue(String.class);
                 String genderFromDB = snapshot.child("gender").getValue(String.class);
+                boolean isDriver = snapshot.child("driver").getValue(Boolean.class);
 
                 getIntent().putExtra("firstName", firstNameFromDB);
                 getIntent().putExtra("lastNameFromDB", lastNameFromDB);
                 getIntent().putExtra("email", emailFromDB);
                 getIntent().putExtra("cell", cellNumberFromDB);
                 getIntent().putExtra("gender", genderFromDB);
+                getIntent().putExtra("isDriver",isDriver);
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void readUserCarInfo() {
+
+        final String userID = firebaseAuth.getCurrentUser().getUid();
+        final String emailFromDB = firebaseAuth.getCurrentUser().getEmail();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("carInfo").child(userID);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                getIntent().putExtra("licenseNumber",snapshot.child("licenseNumber").getValue(String.class));
+                getIntent().putExtra("make",snapshot.child("make").getValue(String.class));
+                getIntent().putExtra("model",snapshot.child("model").getValue(String.class));
+                getIntent().putExtra("year",snapshot.child("year").getValue(String.class));
             }
 
             @Override
