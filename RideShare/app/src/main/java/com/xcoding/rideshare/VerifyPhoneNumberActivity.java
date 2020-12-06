@@ -41,10 +41,30 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
 
         layout = findViewById(R.id.loading_layout_verify);
         progressBar = findViewById(R.id.progress_bar);
-        EditText otp = findViewById(R.id.otp_txt);
+        final EditText otp = findViewById(R.id.otp_txt);
         Button verify = findViewById(R.id.phone_verification_btn);
         ImageView cancel = findViewById(R.id.cancel);
         mAuth = FirebaseAuth.getInstance();
+
+        verify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String code = otp.getText().toString().trim();
+
+                if(code.isEmpty() || code.length() < 6){
+                    otp.setError("invalid OTP");
+                    otp.requestFocus();
+                    return;
+                }else {
+                    otp.setError(null);
+                    otp.clearFocus();
+
+                    progressBar.setVisibility(View.VISIBLE);
+                    layout.setVisibility(View.VISIBLE);
+                    verifyCode(code);
+                }
+            }
+        });
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +105,7 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
-    private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
@@ -117,12 +137,13 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
     }
 
     private void signInWithCedentials(PhoneAuthCredential credential) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(VerifyPhoneNumberActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    firebaseAuth.signOut();
                     Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
