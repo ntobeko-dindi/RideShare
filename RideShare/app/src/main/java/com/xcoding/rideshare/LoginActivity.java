@@ -41,7 +41,7 @@ import static android.view.View.GONE;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Button login, sign_up, google;
+    Button login, sign_up, google,admin;
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
     TextView textView;
@@ -66,6 +66,15 @@ public class LoginActivity extends AppCompatActivity {
         layout = findViewById(R.id.layout_login);
         progressBar = findViewById(R.id.progress_bar);
         loginIntent = new Intent(getApplicationContext(), HomeScreenActivity.class);
+
+        admin = findViewById(R.id.adminBtn);
+
+        admin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),AdminActivity.class));
+            }
+        });
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -226,8 +235,6 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(GONE);
-                                String message = "your google account is connected to our application.";
-                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(getApplicationContext(), HomeScreenActivity.class));
                                 finish();
                             }

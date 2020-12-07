@@ -56,6 +56,16 @@ public class DriverRegistrationFragment extends Fragment implements View.OnClick
     @Override
     public void onDestroy() {
         super.onDestroy();
+        assert getFragmentManager() != null;
+        getFragmentManager().beginTransaction().remove(registerFragment).commit();
+        getFragmentManager().beginTransaction().remove(carInformationFragment).commit();
+        getFragmentManager().beginTransaction().remove(uploadFragment).commit();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        assert getFragmentManager() != null;
         getFragmentManager().beginTransaction().remove(registerFragment).commit();
         getFragmentManager().beginTransaction().remove(carInformationFragment).commit();
         getFragmentManager().beginTransaction().remove(uploadFragment).commit();

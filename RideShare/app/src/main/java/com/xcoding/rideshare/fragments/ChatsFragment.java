@@ -28,6 +28,7 @@ public class ChatsFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
 
+
 //        tabLayout = view.findViewById(R.id.tabs);
 //        viewPager = view.findViewById(R.id.viewpager);
 //        requestsFragment = new RequestsFragment();
@@ -49,6 +50,7 @@ public class ChatsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
 
     }
+
 
 
 //    @Override

@@ -127,7 +127,10 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getContext(), "image uploaded", Toast.LENGTH_LONG).show();
+                        if (imageName.equals("millage")){
+                            Toast.makeText(getContext(), "images uploaded", Toast.LENGTH_LONG).show();
+                        }
+
 
                         layout.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
@@ -226,11 +229,11 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                   // Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e) {
-            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -249,11 +252,11 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e) {
-            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -272,11 +275,11 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e) {
-            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -295,11 +298,11 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e) {
-            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -318,11 +321,11 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e) {
-            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
         }
     }
 }

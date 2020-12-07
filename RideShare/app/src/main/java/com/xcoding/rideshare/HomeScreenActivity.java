@@ -182,7 +182,6 @@ public class HomeScreenActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(getApplicationContext(),"reading user information",Toast.LENGTH_LONG).show();
         readUserInfo();
         readUserCarInfo();
     }
@@ -223,7 +222,10 @@ public class HomeScreenActivity extends AppCompatActivity {
                 String lastNameFromDB = snapshot.child("lastName").getValue(String.class);
                 String cellNumberFromDB = snapshot.child("cell").getValue(String.class);
                 String genderFromDB = snapshot.child("gender").getValue(String.class);
-                boolean isDriver = snapshot.child("driver").getValue(Boolean.class);
+                boolean isDriver = false;
+                if(genderFromDB != null){
+                    isDriver = snapshot.child("driver").getValue(Boolean.class);
+                }
 
                 getIntent().putExtra("firstName", firstNameFromDB);
                 getIntent().putExtra("lastNameFromDB", lastNameFromDB);

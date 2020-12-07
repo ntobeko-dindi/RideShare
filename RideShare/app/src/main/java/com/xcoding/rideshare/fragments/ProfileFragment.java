@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -102,50 +104,56 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     void uploadImage(Uri file) {
 
-        layout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        uploadProgress.setVisibility(View.VISIBLE);
-        StorageReference riversRef = mStorageRef.child("Images/" + firebaseAuth.getCurrentUser().getUid() + "/profilePic");
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            connected = true;
+        } else
+            connected = false;
 
-        riversRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getContext(), "image uploaded", Toast.LENGTH_LONG).show();
+        if(connected){
+            layout.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            uploadProgress.setVisibility(View.VISIBLE);
+            StorageReference riversRef = mStorageRef.child("Images/" + firebaseAuth.getCurrentUser().getUid() + "/profilePic");
 
-                        layout.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.GONE);
-                        uploadProgress.setVisibility(View.GONE);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        layout.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.GONE);
-                        uploadProgress.setVisibility(View.GONE);
-                        Toast.makeText(getContext(), "image uploaded failed", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        double progressPercentage = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                        String p = ((int) progressPercentage) + "%";
-                        uploadProgress.setText(p);
-                    }
-                });
+            riversRef.putFile(file)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(getContext(), "image uploaded", Toast.LENGTH_LONG).show();
+
+                            layout.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
+                            uploadProgress.setVisibility(View.GONE);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            layout.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
+                            uploadProgress.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), "image uploaded failed", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                            double progressPercentage = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                            String p = ((int) progressPercentage) + "%";
+                            uploadProgress.setText(p);
+                        }
+                    });
+        }else {
+            Toast.makeText(getContext(),"no internet connection",Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onClick(View view) {
 
-        Context context = getContext();
-        CharSequence text = "Update Button Clicked!";
-        int duration = Toast.LENGTH_LONG;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
     }
 
     public void customiseProfile() {
@@ -234,11 +242,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e) {
-            Toast.makeText(getContext(),"IOException",Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(),"IOException",Toast.LENGTH_LONG).show();
         }
     }
 }

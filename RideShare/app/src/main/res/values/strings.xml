@@ -19,6 +19,7 @@
     <string name="faq">FAQ</string>
     <string name="contact_us">Contact Us</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="accept_ride">ACCEPT RIDE</string>
     <string name="how_it_works">How it Works</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -201,5 +202,10 @@
     <string name="_0_">0</string>
     <string name="rides">rides</string>
     <string name="send_password_reset_email">send password reset email</string>
+    <string name="recently_posted_rides">recently posted rides</string>
+    <string name="firstSlideTxtc">first create and count and start commuting with convenience</string>
+    <string name="admin">admin</string>
+    <string name="approve">approve</string>
+    <string name="reject">reject</string>
 
 </resources>

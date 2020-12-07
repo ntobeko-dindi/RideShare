@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorCreamWhite"
+    tools:context=".fragments.CarInformationFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".AdminActivity">
+
+
+        <Button
+            android:id="@+id/reject"
+            android:layout_width="190dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/round_btn"
+            android:backgroundTint="@color/red"
+            android:elevation="@dimen/cardview_compat_inset_shadow"
+            android:text="@string/reject"
+            android:textColor="@color/White"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/millegeImg"
+            app:layout_constraintTop_toBottomOf="@+id/approve" />
+
+        <Button
+            android:id="@+id/approve"
+            android:layout_width="190dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="95dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/round_btn"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:elevation="@dimen/cardview_compat_inset_shadow"
+            android:text="@string/approve"
+            android:textColor="@color/White"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/millegeImg"
+            app:layout_constraintTop_toBottomOf="@+id/carRegCertificateImg" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="111dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="112dp"
+            android:text="@string/upload_images"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/licenseImg"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/person_placeholder"
+            app:civ_border_color="@color/White"
+            app:civ_border_width="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/carImg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/prdpImg"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/person_placeholder"
+            app:civ_border_color="@color/White"
+            app:civ_border_width="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/carRegCertificateImg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/millegeImg"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/person_placeholder"
+            app:civ_border_color="@color/White"
+            app:civ_border_width="2dp"
+            app:layout_constraintEnd_toStartOf="@+id/submit"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/carImg" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/carRegCertificateImg"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/person_placeholder"
+            app:civ_border_color="@color/White"
+            app:civ_border_width="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/prdpImg" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/carImg"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="41dp"
+            android:background="@drawable/person_placeholder"
+            app:civ_border_color="@color/White"
+            app:civ_border_width="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/millegeImg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/licenseImg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

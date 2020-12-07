@@ -81,7 +81,7 @@
             android:autofillHints=""
             android:layout_centerHorizontal="true"
             android:background="@drawable/round_border"
-            android:drawableStart="@drawable/ic_baseline_date_range_24"
+            android:drawableStart="@drawable/ic_baseline_date_range"
             android:drawablePadding="10dp"
             android:focusableInTouchMode="false"
             android:hint="@string/departure_date"
@@ -106,13 +106,37 @@
             android:textColor="@color/White"
             android:textSize="17sp"
             android:textStyle="bold" />
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:layout_marginTop="275dp"-->
-<!--            android:background="@drawable/wave"/>-->
 
 
+        <TextView
+            android:id="@+id/recent_rides"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:layout_below="@+id/search_available_rides"
+            android:textColor="@color/colorPrimaryDark"
+            android:textAllCaps="true"
+            android:text="@string/recently_posted_rides"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/loading_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/recent_rides"
+            android:orientation="horizontal">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/requestedRidesRecyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp" />
+        </LinearLayout>
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

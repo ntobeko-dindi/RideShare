@@ -1,7 +1,7 @@
 package com.xcoding.rideshare.modals;
 
 public class ShortDistanceCommuteModal {
-    private String time, beginning,destination, startDate, endDate, sits, price;
+    private String rideSourceID, rideSourceName, time, beginning,destination, startDate, endDate, sits, price;
 
     public ShortDistanceCommuteModal() {
     }
@@ -14,6 +14,22 @@ public class ShortDistanceCommuteModal {
         this.endDate = endDate;
         this.sits = sits;
         this.price = price;
+    }
+
+    public String getRideSourceID() {
+        return rideSourceID;
+    }
+
+    public void setRideSourceID(String rideSourceID) {
+        this.rideSourceID = rideSourceID;
+    }
+
+    public String getRideSourceName() {
+        return rideSourceName;
+    }
+
+    public void setRideSourceName(String rideSourceName) {
+        this.rideSourceName = rideSourceName;
     }
 
     public String getTime() {

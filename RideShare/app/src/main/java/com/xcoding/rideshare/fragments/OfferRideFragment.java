@@ -17,19 +17,29 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.xcoding.rideshare.R;
+import com.xcoding.rideshare.adapters.LongDistanceAdapter;
+import com.xcoding.rideshare.adapters.RequestsAdapter;
 import com.xcoding.rideshare.modals.LongDistanceCommuteModal;
+import com.xcoding.rideshare.modals.RequestRideModel;
 import com.xcoding.rideshare.modals.ShortDistanceCommuteModal;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class OfferRideFragment extends Fragment implements View.OnClickListener {
 
@@ -38,6 +48,13 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
     private BottomSheetDialog bottomSheetDialog;
     ImageView longDistanceSheetClose;
     EditText departureDate;
+
+
+    RecyclerView recyclerView;
+    List<RequestRideModel> requestRideModel;
+    RequestsAdapter requestsAdapter;
+    DatabaseReference reference;
+    FirebaseAuth fAuth;
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDatabase;
@@ -51,6 +68,10 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
         longDistanceSheetClose = view.findViewById(R.id.long_distance_sheet_close);
         departureDate = view.findViewById(R.id.long_distance_date);
         firebaseAuth = FirebaseAuth.getInstance();
+        fAuth = FirebaseAuth.getInstance();
+        recyclerView = view.findViewById(R.id.offerRidesRecyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        requestRideModel = new ArrayList<>();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         final Bundle bundle = getActivity().getIntent().getExtras();
@@ -157,14 +178,22 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
                                     showError(price, "price per sit required");
                                     fieldsOkay = false;
                                 }
+                                if(Integer.valueOf(inputSits) <= 0){
+                                    showError(price, "invalid number sits");
+                                    fieldsOkay = false;
+                                }
+
 
                                 if (fieldsOkay) {
                                     LongDistanceCommuteModal longDistance = new LongDistanceCommuteModal();
                                     longDistance.setBeginning(inputBeginning);
-                                    longDistance.setEnd(inputEnd);
+                                    longDistance.setDestination(inputEnd);
                                     longDistance.setDate(inputDate);
                                     longDistance.setSits(inputSits);
                                     longDistance.setPrice(inputPrice);
+                                    longDistance.setRideSourceID(firebaseAuth.getCurrentUser().getUid());
+                                    String fnam = bundle.getString("lastNameFromDB") + " " +bundle.getString("firstName");
+                                    longDistance.setRideSourceName(fnam);
 
                                     Date currentDate = new Date();
                                     @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
@@ -345,6 +374,8 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
                                 commuteModal.setEndDate(inputEndDate);
                                 commuteModal.setSits(inputSits);
                                 commuteModal.setPrice(inputPrice);
+                                commuteModal.setRideSourceID(firebaseAuth.getCurrentUser().getUid());
+                                commuteModal.setRideSourceName(bundle.getString("lastNameFromDB" + " " + bundle.getString("firstName")));
 
                                 Date currentDate = new Date();
                                 @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
@@ -388,4 +419,30 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
     public void onClick(View view) {
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getRideRequests();
+    }
+
+    void getRideRequests(){
+        reference = FirebaseDatabase.getInstance().getReference("rideRequests");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    RequestRideModel modal = dataSnapshot.getValue(RequestRideModel.class);
+                    requestRideModel.add(modal);
+                }
+                requestsAdapter = new RequestsAdapter(requestRideModel,getContext());
+                recyclerView.setAdapter(requestsAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+   }
 }

@@ -17,10 +17,20 @@
         android:id="@+id/loading_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_marginTop="-7dp"
+        android:layout_marginTop="-40dp"
+        android:gravity="center"
         android:background="@drawable/square_loader"
-        android:visibility="gone"
-        android:layout_height="match_parent"/>
+        android:visibility="visible"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="false"
+            android:visibility="visible" />
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_marginBottom="2dp"
