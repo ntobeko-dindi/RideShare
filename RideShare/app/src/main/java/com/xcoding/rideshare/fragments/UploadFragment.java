@@ -1,14 +1,15 @@
 package com.xcoding.rideshare.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,21 +21,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.xcoding.rideshare.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -52,7 +49,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     private String imageName;
 
     CircleImageView driverLicence, prdp, carPhoto, carRegCert, millagePic;
-    Button driverLicenceBTN, prdpBTN, carPhotoBTN, carRegCertBTN, millagePicBTN;
+    Button driverLicenceBTN, prdpBTN, carPhotoBTN, carRegCertBTN, millagePicBTN, back, submit;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +61,8 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         carPhoto = view.findViewById(R.id.carImg);
         carRegCert = view.findViewById(R.id.carRegCertificateImg);
         millagePic = view.findViewById(R.id.millegeImg);
+        back = view.findViewById(R.id.backOnUpload);
+        submit = view.findViewById(R.id.submit_driver_application);
 
         uploadProgress = view.findViewById(R.id.upload_progress);
         layout = view.findViewById(R.id.relativeLayout);
@@ -83,77 +82,100 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         carPhotoBTN.setOnClickListener(this);
         carRegCertBTN.setOnClickListener(this);
         millagePicBTN.setOnClickListener(this);
+        back.setOnClickListener(this);
+
+        submit.setOnClickListener(v -> {
+            if (driverLicence.getDrawable() == null || prdp.getDrawable() == null ||
+                    carPhoto.getDrawable() == null || carRegCert.getDrawable() == null
+                    || millagePic.getDrawable() == null) {
+
+                String message = "Your Application Will Not be Processed Until you Upload all Required Images";
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setCancelable(true);
+                builder.setTitle("Warning");
+                builder.setMessage(message);
+                builder.setPositiveButton("Continue Now!",
+                        (dialog, which) -> {
+                        });
+                builder.setNegativeButton(null, (dialog, which) -> {
+                    //TODO
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                String message = "Your Application was Successfully Submitted and you will be notified via the email";
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setCancelable(true);
+                builder.setTitle("Online Registration Confirmation");
+                builder.setMessage(message);
+                builder.setPositiveButton("OKAY!",
+                        (dialog, which) -> {
+
+                            String keyId = firebaseAuth.getCurrentUser().getUid();
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference myRef = database.getReference("users").child(keyId).child("driver");
+
+                            myRef.setValue(true).addOnSuccessListener(aVoid -> {
+                                FragmentTransaction t = getFragmentManager().beginTransaction();
+                                Fragment mFrag = new RegisterFragment();
+                                t.replace(R.id.frameLayout, mFrag);
+                                t.commit();
+                            });
+
+                        });
+                builder.setNegativeButton(null, (dialog, which) -> {
+                    //TODO
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
 
         return view;
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.licenseBtn:
-                selectedBtn = 1;
-                imageName = "license";
-                break;
-            case R.id.prdpBtn:
-                selectedBtn = 2;
-                imageName = "pdp";
-                break;
-            case R.id.carBtn:
-                selectedBtn = 3;
-                imageName = "car";
-                break;
-            case R.id.carRegCertificateBtn:
-                selectedBtn = 4;
-                imageName = "carRegCertificate";
-                break;
-            case R.id.millegeBtn:
-                selectedBtn = 5;
-                imageName = "millage";
-                break;
+        if (v.getId() == R.id.licenseBtn) {
+            selectedBtn = 1;
+            imageName = "license";
+        } else if (v.getId() == R.id.prdpBtn) {
+            selectedBtn = 2;
+            imageName = "pdp";
+        } else if (v.getId() == R.id.carBtn) {
+            selectedBtn = 3;
+            imageName = "car";
+        } else if (v.getId() == R.id.carRegCertificateBtn) {
+            selectedBtn = 4;
+            imageName = "carRegCertificate";
+        } else if (v.getId() == R.id.millegeBtn) {
+            selectedBtn = 5;
+            imageName = "millage";
+        } else if (v.getId() == R.id.backOnUpload) {
+            FragmentTransaction t = getFragmentManager().beginTransaction();
+            Fragment mFrag = new CarInformationFragment();
+            t.replace(R.id.frameLayout, mFrag);
+            t.commit();
+            return;
         }
         openLocalStorage();
     }
 
     void uploadImage(Uri file) {
 
-        layout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        uploadProgress.setVisibility(View.VISIBLE);
-
-
         StorageReference riversRef = mStorageRef.child("Images/" + firebaseAuth.getCurrentUser().getUid() + "/" + imageName);
 
         riversRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        if (imageName.equals("millage")){
-                            Toast.makeText(getContext(), "images uploaded", Toast.LENGTH_LONG).show();
-                        }
-
-
-                        layout.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.GONE);
-                        uploadProgress.setVisibility(View.GONE);
-                    }
+                .addOnSuccessListener(taskSnapshot -> {
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        layout.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.GONE);
-                        uploadProgress.setVisibility(View.GONE);
-                        Toast.makeText(getContext(), "image uploaded failed", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        double progressPercentage = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                        String p = ((int) progressPercentage) + "%";
-                        uploadProgress.setText(p);
-                    }
-
+                .addOnFailureListener(exception -> Toast.makeText(getContext(), "image uploaded failed", Toast.LENGTH_LONG).show())
+                .addOnProgressListener(snapshot -> {
+                    double progressPercentage = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                    String p = ((int) progressPercentage) + "%";
+                    uploadProgress.setText(p);
                 });
     }
 
@@ -219,21 +241,13 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         StorageReference riversRef = mStorageRef.child("Images/" + userID + "/license");
         try {
             final File localFile = File.createTempFile("license", "*");
-            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    if (getActivity() != null) {
-                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(driverLicence);
-                    }
+            riversRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                if (getActivity() != null) {
+                    Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(driverLicence);
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                   // Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+            }).addOnFailureListener(e -> {
             });
-        } catch (IOException e) {
-            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+        } catch (IOException ignored) {
         }
     }
 
@@ -242,21 +256,13 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         StorageReference riversRef = mStorageRef.child("Images/" + userID + "/pdp");
         try {
             final File localFile = File.createTempFile("pdp", "*");
-            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    if (getActivity() != null) {
-                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(prdp);
-                    }
+            riversRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                if (getActivity() != null) {
+                    Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(prdp);
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+            }).addOnFailureListener(e -> {
             });
-        } catch (IOException e) {
-            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+        } catch (IOException ignored) {
         }
     }
 
@@ -265,21 +271,13 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         StorageReference riversRef = mStorageRef.child("Images/" + userID + "/car");
         try {
             final File localFile = File.createTempFile("car", "*");
-            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    if (getActivity() != null) {
-                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(carPhoto);
-                    }
+            riversRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                if (getActivity() != null) {
+                    Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(carPhoto);
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+            }).addOnFailureListener(e -> {
             });
-        } catch (IOException e) {
-            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+        } catch (IOException ignored) {
         }
     }
 
@@ -288,21 +286,13 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         StorageReference riversRef = mStorageRef.child("Images/" + userID + "/carRegCertificate");
         try {
             final File localFile = File.createTempFile("carRegCertificate", "*");
-            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    if (getActivity() != null) {
-                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(carRegCert);
-                    }
+            riversRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                if (getActivity() != null) {
+                    Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(carRegCert);
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+            }).addOnFailureListener(e -> {
             });
-        } catch (IOException e) {
-            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+        } catch (IOException ignored) {
         }
     }
 
@@ -311,21 +301,13 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         StorageReference riversRef = mStorageRef.child("Images/" + userID + "/millage");
         try {
             final File localFile = File.createTempFile("millage", "*");
-            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    if (getActivity() != null) {
-                        Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(millagePic);
-                    }
+            riversRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                if (getActivity() != null) {
+                    Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(millagePic);
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+            }).addOnFailureListener(e -> {
             });
-        } catch (IOException e) {
-            //Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+        } catch (IOException ignored) {
         }
     }
 }

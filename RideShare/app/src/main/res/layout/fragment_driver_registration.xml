@@ -14,7 +14,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="80dp"
         android:animateLayoutChanges="true"
         android:backgroundTint="@color/transparent"
         android:elevation="100dp"
@@ -23,20 +23,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/round_border"
-            android:elevation="60dp">
-
-        </androidx.viewpager.widget.ViewPager>
-
+            android:layout_marginBottom="80dp"
+            android:id="@+id/frameLayout">
+        </FrameLayout>
     </androidx.cardview.widget.CardView>
 
+    <Button
+        android:id="@+id/next"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="79dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="80dp"
+        android:background="@drawable/round_btn"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:elevation="@dimen/cardview_compat_inset_shadow"
+        android:text="@string/next"
+        android:textColor="@color/White"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/book_ride_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/ic_baseline_black_close_24"
+        android:contentDescription="@string/close_icon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="-30dp"
+        android:text="Book a Sit"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/availableSits"
+        android:layout_width="270dp"
+        android:layout_gravity="center"
+        android:layout_height="45dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:drawableStart="@drawable/ic_baseline_airline_seat_recline_normal_24"
+        android:drawablePadding="10dp"
+        android:hint="Available Sits"
+        android:inputType="none"
+        android:focusable="false"
+        android:paddingStart="12dp"
+        android:paddingEnd="0dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:autofillHints="" />
+
+    <EditText
+        android:id="@+id/bookingSits"
+        android:layout_width="270dp"
+        android:layout_gravity="center"
+        android:layout_height="45dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:drawableStart="@drawable/ic_baseline_airline_seat_recline_normal_24"
+        android:drawablePadding="10dp"
+        android:hint="Number of Sits to Book"
+        android:inputType="number"
+        android:paddingStart="12dp"
+        android:paddingEnd="0dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:autofillHints="" />
+
+
+    <EditText
+        android:id="@+id/booking_price"
+        android:layout_width="270dp"
+        android:layout_gravity="center"
+        android:layout_height="45dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:drawableStart="@drawable/ic_baseline_money_24"
+        android:drawablePadding="10dp"
+        android:hint="@string/price"
+        android:focusable="false"
+        android:inputType="none"
+        android:paddingStart="12dp"
+        android:paddingEnd="0dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/submitBooking"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="6dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/round_btn"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="@string/book"
+        android:textColor="@color/White"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

@@ -78,8 +78,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:gravity="center"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="170dp"
+            android:layout_marginTop="180dp"
             android:orientation="horizontal">
 
             <TextView
@@ -96,37 +97,6 @@
                 android:text="@string/offer_ride"
                 android:textColor="@color/colorPrimaryDark"
                 app:drawableStartCompat="@drawable/ic_baseline_local_offer_24" />
-
-            <TextView
-                android:id="@+id/txt_like"
-                android:layout_marginStart="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="3dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="0dp"
-                android:paddingBottom="8dp"
-                android:drawablePadding="3dp"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:text="@string/like"
-                android:textColor="@color/colorPrimaryDark"
-                app:drawableStartCompat="@drawable/ic_like" />
-            <TextView
-                android:id="@+id/txt_share"
-                android:layout_marginStart="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="3dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="0dp"
-                android:paddingBottom="8dp"
-                android:drawablePadding="3dp"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:text="@string/share"
-                android:textColor="@color/colorPrimaryDark"
-                app:drawableStartCompat="@drawable/ic_baseline_date_range_24" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

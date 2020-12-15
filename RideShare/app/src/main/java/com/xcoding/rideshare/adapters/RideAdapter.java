@@ -50,21 +50,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
                 Toast.makeText(context,"offering ride",Toast.LENGTH_LONG).show();
             }
         });
-
-        holder.like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,"post liked",Toast.LENGTH_LONG).show();
-            }
-        });
-
-        holder.share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,"sharing post",Toast.LENGTH_LONG).show();
-            }
-        });
-
         holder.description.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,8 +74,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
         TextView date;
         TextView name;
         TextView offer;
-        TextView like;
-        TextView share;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,8 +82,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.ViewHolder> im
             description = itemView.findViewById(R.id.description);
             date = itemView.findViewById(R.id.date);
             offer = itemView.findViewById(R.id.txt_offer);
-            like = itemView.findViewById(R.id.txt_like);
-            share = itemView.findViewById(R.id.txt_share);
         }
     }
 }

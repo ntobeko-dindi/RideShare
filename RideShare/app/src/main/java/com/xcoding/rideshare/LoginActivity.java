@@ -41,7 +41,7 @@ import static android.view.View.GONE;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Button login, sign_up, google,admin;
+    Button login, sign_up, google;
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
     TextView textView;
@@ -66,15 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         layout = findViewById(R.id.layout_login);
         progressBar = findViewById(R.id.progress_bar);
         loginIntent = new Intent(getApplicationContext(), HomeScreenActivity.class);
-
-        admin = findViewById(R.id.adminBtn);
-
-        admin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),AdminActivity.class));
-            }
-        });
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -112,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                 e_mail.setEmail(inputEmail);
 
                 if (!e_mail.emailOkay()) {
-                    mail.setError("invalid phone number");
+                    mail.setError("invalid email address");
                     mail.requestFocus();
                     fieldsValid = false;
                 } else {

@@ -48,12 +48,11 @@ public class RequestsAdapter extends RecyclerView.Adapter {
         String loc = modal.getBeginning();
         String dest = modal.getEnd();
         String day = modal.getDate();
+        String date = modal.getTime().substring(0, 9);
 
-        String completeDetails = "Looking for a ride from around " + loc + " to " + dest + " on " + day + "\n";
+        String completeDetails = "Looking for a ride from around " + loc + " to " + dest + " on " + day + "\n" +"\nPosted on : " + date;
 
         viewHolderClass.description.setText(completeDetails);
-        String date = modal.getTime().substring(0, 9);
-        viewHolderClass.share.setText(date);
         viewHolderClass.name.setText(modal.getRideSourceName());
 
         viewHolderClass.offer.setOnClickListener(v -> {
@@ -88,7 +87,7 @@ public class RequestsAdapter extends RecyclerView.Adapter {
     public class ViewHolderClass extends RecyclerView.ViewHolder {
 
         ImageView image;
-        TextView description, date, name, offer, like, share;
+        TextView description, date, name, offer;
 
         public ViewHolderClass(@NonNull View itemView) {
             super(itemView);
@@ -97,8 +96,6 @@ public class RequestsAdapter extends RecyclerView.Adapter {
             description = itemView.findViewById(R.id.description);
             date = itemView.findViewById(R.id.date);
             offer = itemView.findViewById(R.id.txt_offer);
-            like = itemView.findViewById(R.id.txt_like);
-            share = itemView.findViewById(R.id.txt_share);
         }
     }
 }

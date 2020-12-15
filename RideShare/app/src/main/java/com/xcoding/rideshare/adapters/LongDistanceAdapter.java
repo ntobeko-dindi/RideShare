@@ -30,17 +30,19 @@ public class LongDistanceAdapter extends RecyclerView.Adapter {
 
     List<LongDistanceCommuteModal> longDistanceCommuteModalList;
     Context context;
+    private OnRideListener mOnRideListener;
 
-    public LongDistanceAdapter(List<LongDistanceCommuteModal> longDistanceCommuteModalList,Context context) {
+    public LongDistanceAdapter(List<LongDistanceCommuteModal> longDistanceCommuteModalList,Context context, OnRideListener mOnRideListener) {
         this.longDistanceCommuteModalList = longDistanceCommuteModalList;
         this.context = context;
+        this.mOnRideListener = mOnRideListener;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rides_list,parent,false);
-        ViewHolderClass viewHolderClass = new ViewHolderClass(view);
+        ViewHolderClass viewHolderClass = new ViewHolderClass(view,mOnRideListener);
         return viewHolderClass;
     }
 
@@ -57,86 +59,53 @@ public class LongDistanceAdapter extends RecyclerView.Adapter {
         String dest = modal.getDestination();
         String day = modal.getDate();
         String pric = modal.getPrice();
+        String date = modal.getTime().substring(0,9);
 
-        String completeDetails = "Looking for " + passengers + " passengers from around " + loc + " to " + dest + " on " + day + "\n" +
-                " Price per passenger is R" + pric;
+        String completeDetails = "Looking for " + passengers + " passengers from around " +
+                loc + " to " + dest + " on " + day + "\n" +
+                " Price per passenger is R" + pric +"\n\nPosted on : " + date;
+
+        if(day == null){
+            completeDetails = "Looking for " + passengers + " passengers from around " +
+                    loc + " to " + dest + "\n" +
+                    " Price per passenger is R" + pric +"\n\nPosted on : " + date;
+        }
 
         viewHolderClass.offer.setText("BOOK A SIT");
         viewHolderClass.description.setText(completeDetails);
-        String date = modal.getTime().substring(0,9);
-        viewHolderClass.share.setText(date);
         viewHolderClass.name.setText(modal.getRideSourceName());
-
-        viewHolderClass.offer.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setCancelable(true);
-            builder.setTitle("CONFIRMATION PROMPT");
-            builder.setMessage("Are you sure you want to book a sit in this ride?");
-            builder.setPositiveButton("Yes!",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(context,"Sit secured!",Toast.LENGTH_LONG).show();
-
-                            String message = "you have successfully booked a ride with RideShare";
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                                NotificationChannel channel =
-                                        new NotificationChannel("n","n",NotificationManager.IMPORTANCE_DEFAULT);
-
-                                NotificationManager manager = context.getSystemService(NotificationManager.class);
-                                manager.createNotificationChannel(channel);
-                            }
-
-                            NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"n")
-                                    .setContentText("RideShare")
-                                    .setSmallIcon(R.drawable.ic_notifications)
-                                    .setAutoCancel(true)
-                                    .setColorized(true)
-                                    .setAllowSystemGeneratedContextualActions(true)
-                                    .setContentText(message);
-
-                            NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
-                            managerCompat.notify(999,builder.build());
-                        }
-                    });
-            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(context,"Operation cancelled!!",Toast.LENGTH_LONG).show();
-                }
-            });
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        });
     }
 
     @Override
     public int getItemCount() {
         return longDistanceCommuteModalList.size();
     }
-    public class ViewHolderClass extends RecyclerView.ViewHolder {
+    public class ViewHolderClass extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView image;
         TextView description, date, name, offer, like, share;
 
-        public ViewHolderClass(@NonNull View itemView) {
+        OnRideListener onRideListener;
+
+
+        public ViewHolderClass(@NonNull View itemView, OnRideListener onRideListener){
             super(itemView);
             image = itemView.findViewById(R.id.image);
             name = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
             date = itemView.findViewById(R.id.date);
             offer = itemView.findViewById(R.id.txt_offer);
-            like = itemView.findViewById(R.id.txt_like);
-            share = itemView.findViewById(R.id.txt_share);
+            this.onRideListener = onRideListener;
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int vv = v.getId();
-                    Toast.makeText(context,String.valueOf(vv),Toast.LENGTH_LONG).show();
-                }
-            });
+            offer.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            onRideListener.onRideClick(getAdapterPosition());
+        }
+    }
+    public interface OnRideListener{
+        void onRideClick(int position);
     }
 }

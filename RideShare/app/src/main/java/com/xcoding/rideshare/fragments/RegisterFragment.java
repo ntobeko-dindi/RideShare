@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -24,19 +25,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.xcoding.rideshare.R;
 
 import java.io.File;
@@ -45,8 +42,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.xml.transform.Result;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener {
@@ -54,10 +49,9 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     public static final int CAMERA_PERM_CODE = 101;
     private static final int CAMERA_REQUEST_CODE = 102;
     EditText fName, lName, dob;
-    Button genderFemale, genderMale, takePicture;
+    Button genderFemale, genderMale, takePicture, submit;
     DatePickerDialog.OnDateSetListener setListener;
     String currentPhotoPath;
-
 
     private StorageReference mStorageRef;
     private FirebaseAuth firebaseAuth;
@@ -77,11 +71,12 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         dob = view.findViewById(R.id.dob_id);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-
+        submit = view.findViewById(R.id.submit);
 
         takePicture.setOnClickListener(this);
         genderMale.setOnClickListener(this);
         genderFemale.setOnClickListener(this);
+        submit.setOnClickListener(this);
 
         getUserProfilePictureFromDB();
 
@@ -90,25 +85,19 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        dob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        setListener, year, month, day
-                );
-                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                datePickerDialog.show();
-            }
+        dob.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                    setListener, year, month, day
+            );
+            datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            datePickerDialog.show();
         });
 
-        setListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month + 1;
-                String date = dayOfMonth + "/" + month + "/" + year;
-                dob.setText(date);
-            }
+        setListener = (view1, year1, month1, dayOfMonth) -> {
+            month1 = month1 + 1;
+            String date = dayOfMonth + "/" + month1 + "/" + year1;
+            dob.setText(date);
         };
 
         customiseProfile();
@@ -125,6 +114,40 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         } else if (v.getId() == R.id.gender_male_btn) {
             genderMale.setBackgroundResource(R.drawable.gender_male_selected);
             genderFemale.setBackgroundResource(R.drawable.gender_female);
+        } else if (v.getId() == R.id.submit) {
+            goToCarInfo();
+        }
+    }
+
+    private void goToCarInfo() {
+        String inputYearOfBirth;
+        String currentDate = Calendar.getInstance().getTime().toString().substring(30);
+
+        try {
+            inputYearOfBirth = dob.getText().toString().substring(6);
+
+            int yearOfBirth = Integer.parseInt(inputYearOfBirth);
+            int currentYear = Integer.parseInt(currentDate);
+
+            if (yearOfBirth >= currentYear || currentYear - yearOfBirth < 18) {
+                Toast.makeText(getContext(), "you must be over 18 to become a driver", Toast.LENGTH_LONG).show();
+            } else {
+                String keyId = firebaseAuth.getCurrentUser().getUid();
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("users").child(keyId).child("dateOfBirth");
+
+                myRef.setValue(dob.getText().toString()).addOnSuccessListener(aVoid -> {
+                    FragmentTransaction t = getFragmentManager().beginTransaction();
+                    Fragment mFrag = new CarInformationFragment();
+                    t.replace(R.id.frameLayout, mFrag);
+                    t.commit();
+                });
+            }
+        } catch (Exception ignored) {
+            dob.setError("date of birth cannot be empty");
+            Toast.makeText(getContext(), "date of birth cannot be empty", Toast.LENGTH_SHORT).show();
+            dob.requestFocus();
         }
     }
 
@@ -152,7 +175,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        if(requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null){
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             Bundle bundle = data.getExtras();
             Bitmap image = (Bitmap) bundle.get("data");
 
@@ -204,27 +227,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    void uploadImage(Uri file) {
 
-
-
-
-    void uploadImage(Uri file){
-
-        StorageReference riversRef = mStorageRef.child("Images/"+firebaseAuth.getCurrentUser().getUid()+"/profilePic");
+        StorageReference riversRef = mStorageRef.child("Images/" + firebaseAuth.getCurrentUser().getUid() + "/profilePic");
 
         riversRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getContext(),"image uploaded",Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getContext(),"image uploaded failed",Toast.LENGTH_LONG).show();
-                    }
-                });
+                .addOnSuccessListener(taskSnapshot -> Toast.makeText(getContext(), "image uploaded", Toast.LENGTH_LONG).show())
+                .addOnFailureListener(exception -> Toast.makeText(getContext(), "image uploaded failed", Toast.LENGTH_LONG).show());
     }
 
     public void customiseProfile() {
@@ -257,22 +266,14 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         String userID = firebaseAuth.getCurrentUser().getUid();
         StorageReference riversRef = mStorageRef.child("Images/" + userID + "/profilePic");
         try {
-            final File localFile = File.createTempFile("profilePic","*");
-            riversRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                   if(getActivity() != null){
-                       Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(profilePic);
-                   }
+            final File localFile = File.createTempFile("profilePic", "*");
+            riversRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                if (getActivity() != null) {
+                    Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(profilePic);
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-                }
-            });
+            }).addOnFailureListener(e -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show());
         } catch (IOException e) {
-            Toast.makeText(getContext(),"IOException",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -282,19 +283,27 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         if ("".equals(fName.getText().toString())) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras == null) {
-                Toast.makeText(getContext(),"no extras to display",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "no extras to display", Toast.LENGTH_LONG).show();
             } else {
 
                 fName.setText(extras.getString("firstName"));
                 lName.setText(extras.getString("lastNameFromDB"));
+                String dateOfBirth = extras.getString("dateOfBirth");
+
+                if(dateOfBirth != null){
+                    dob.setText(dateOfBirth);
+                }
+
                 String sex = extras.getString("gender");
 
-                if(sex.equalsIgnoreCase("male")){
+                if (sex.equalsIgnoreCase("male")) {
                     genderMale.setBackgroundResource(R.drawable.gender_male_selected);
                     genderFemale.setBackgroundResource(R.drawable.gender_female);
-                }else if(sex.equalsIgnoreCase("female")){
+                    genderFemale.setClickable(false);
+                } else if (sex.equalsIgnoreCase("female")) {
                     genderFemale.setBackgroundResource(R.drawable.gender_female_selected);
                     genderMale.setBackgroundResource(R.drawable.gender_male);
+                    genderMale.setClickable(false);
                 }
             }
         }
@@ -306,19 +315,22 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         if ("".equals(fName.getText().toString())) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras == null) {
-                Toast.makeText(getContext(),"no extras to display",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "no extras to display", Toast.LENGTH_LONG).show();
             } else {
 
                 fName.setText(extras.getString("firstName"));
                 lName.setText(extras.getString("lastNameFromDB"));
                 String sex = extras.getString("gender");
 
-                if(sex.equalsIgnoreCase("male")){
+                if (sex.equalsIgnoreCase("male")) {
                     genderMale.setBackgroundResource(R.drawable.gender_male_selected);
                     genderFemale.setBackgroundResource(R.drawable.gender_female);
-                }else if(sex.equalsIgnoreCase("female")){
+                    genderFemale.setClickable(false);
+                } else if (sex.equalsIgnoreCase("female")) {
                     genderFemale.setBackgroundResource(R.drawable.gender_female_selected);
                     genderMale.setBackgroundResource(R.drawable.gender_male);
+                    genderMale.setClickable(false);
+
                 }
             }
         }

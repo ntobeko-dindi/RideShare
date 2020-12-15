@@ -29,7 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.xcoding.rideshare.R;
-import com.xcoding.rideshare.adapters.LongDistanceAdapter;
 import com.xcoding.rideshare.adapters.RequestsAdapter;
 import com.xcoding.rideshare.modals.LongDistanceCommuteModal;
 import com.xcoding.rideshare.modals.RequestRideModel;
@@ -368,6 +367,7 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
                             if (dataOkay) {
                                 ShortDistanceCommuteModal commuteModal = new ShortDistanceCommuteModal();
 
+                                Bundle bundle1 = getActivity().getIntent().getExtras();
                                 commuteModal.setBeginning(inputBeginning);
                                 commuteModal.setDestination(inputDestination);
                                 commuteModal.setStartDate(inputStartDate);
@@ -375,7 +375,7 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
                                 commuteModal.setSits(inputSits);
                                 commuteModal.setPrice(inputPrice);
                                 commuteModal.setRideSourceID(firebaseAuth.getCurrentUser().getUid());
-                                commuteModal.setRideSourceName(bundle.getString("lastNameFromDB" + " " + bundle.getString("firstName")));
+                                commuteModal.setRideSourceName(bundle1.getString("lastNameFromDB") + " " + bundle1.getString("firstName"));
 
                                 Date currentDate = new Date();
                                 @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");

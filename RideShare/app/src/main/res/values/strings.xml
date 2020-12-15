@@ -207,5 +207,10 @@
     <string name="admin">admin</string>
     <string name="approve">approve</string>
     <string name="reject">reject</string>
+    <string name="back">back</string>
+    <string name="you_ll_need_the_following">You\'ll need the following</string>
+    <string name="register_as_a_driver_to_offer_rides">Register as a driver to offer rides</string>
+    <string name="placeholder">-placeholder</string>
+    <string name="book">book</string>
 
 </resources>

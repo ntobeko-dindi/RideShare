@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ public class CarInformationFragment extends Fragment implements View.OnClickList
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDatabase;
     Vehicle vehicle;
+    Button next,back;
 
     private EditText make, model, year, licenseNum;
 
@@ -39,34 +41,41 @@ public class CarInformationFragment extends Fragment implements View.OnClickList
         model = view.findViewById(R.id.editTextModel);
         year = view.findViewById(R.id.editTextYear);
         licenseNum = view.findViewById(R.id.editTextPlateNumber);
+        next = view.findViewById(R.id.nextOnCarDetails);
+        back = view.findViewById(R.id.backOnCarDetails);
         vehicle = new Vehicle();
+
+        next.setOnClickListener(this);
+        back.setOnClickListener(this);
 
 
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference("carInfo");
 
-        Button submit = view.findViewById(R.id.submit);
-        submit.setOnClickListener(this);
-
         return view;
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.submit) {
+        if (v.getId() == R.id.nextOnCarDetails) {
 
             if (validFields()) {
                 String keyId = firebaseAuth.getCurrentUser().getUid();
-                mDatabase.child(keyId).setValue(vehicle).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getContext(), "data written", Toast.LENGTH_LONG).show();
-                    }
+                mDatabase.child(keyId).setValue(vehicle).addOnSuccessListener(aVoid -> {
+                    FragmentTransaction t = getFragmentManager().beginTransaction();
+                    Fragment mFrag = new UploadFragment();
+                    t.replace(R.id.frameLayout, mFrag);
+                    t.commit();
                 });
             } else {
                 Toast.makeText(getContext(), "please fill in all fields", Toast.LENGTH_LONG).show();
             }
+        }else if(v.getId() == R.id.backOnCarDetails){
+            FragmentTransaction t = getFragmentManager().beginTransaction();
+            Fragment mFrag = new RegisterFragment();
+            t.replace(R.id.frameLayout, mFrag);
+            t.commit();
         }
     }
 
@@ -94,7 +103,7 @@ public class CarInformationFragment extends Fragment implements View.OnClickList
             validFields = false;
         }
         if (licenseInput.isEmpty()) {
-            licenseNum.setError("license required");
+            licenseNum.setError("plate number required");
             licenseNum.requestFocus();
             validFields = false;
         }
@@ -115,7 +124,6 @@ public class CarInformationFragment extends Fragment implements View.OnClickList
     private void readUserInfo() {
 
         final String userID = firebaseAuth.getCurrentUser().getUid();
-        final String emailFromDB = firebaseAuth.getCurrentUser().getEmail();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("carInfo").child(userID);
 

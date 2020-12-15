@@ -2,8 +2,6 @@ package com.xcoding.rideshare.modals;
 
 import android.util.Patterns;
 
-import javax.crypto.SecretKey;
-
 public class VerifyNewUserDetails {
     private String firstName;
     private String lastName;
@@ -12,25 +10,39 @@ public class VerifyNewUserDetails {
     private String pass;
     private String gender;
     private boolean isDriver;
+    private String dateOfBirth;
 
     public VerifyNewUserDetails() {
     }
 
     public String validate() {
         //,,,
-        if ("".equals(firstName)) {
+        if ("".equals(firstName) || !this.isCorrectName(this.firstName)) {
             return "firstNameError";
-        } else if ("".equals(lastName)) {
+        } else if ("".equals(lastName) || !this.isCorrectName(this.lastName)) {
             return "lastNameError";
         } else if ("".equals(email) || !emailOkay()) {
             return "emailError";
-        } else if ("".equals(cell) /*|| !isValidPhone()*/) {
+        } else if ("".equals(cell) || !isValidPhone()) {
             return "phoneNumberError";
-        } else if ("".equals(pass) /*!passwordFormatOkay()*/) {
+        } else if ("".equals(pass) || !passwordFormatOkay()) {
             return "passwordError";
         } else {
             return "ok";
         }
+    }
+
+    public boolean isCorrectName(String name) {
+        boolean isValidName = true;
+
+        int count = 0;
+        while (count < name.length()) {
+            if (Character.isDigit(name.charAt(count))) {
+                isValidName = false;
+            }
+            count++;
+        }
+        return isValidName;
     }
 
     public boolean emailOkay() {
@@ -42,7 +54,7 @@ public class VerifyNewUserDetails {
     }
 
     public boolean isValidPhone() {
-        if (cell.length() != 10) {
+        if (cell.length() != 9) {
             return false;
         } else {
             return android.util.Patterns.PHONE.matcher(cell).matches();
@@ -103,8 +115,11 @@ public class VerifyNewUserDetails {
         isDriver = driver;
     }
 
-    //getters
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 
+    //getters
 
     public String getFirstName() {
         return firstName;
@@ -122,9 +137,15 @@ public class VerifyNewUserDetails {
         return gender;
     }
 
-    public String getEmail(){return email;}
+    public String getEmail() {
+        return email;
+    }
 
     public boolean isDriver() {
         return isDriver;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 }

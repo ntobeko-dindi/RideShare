@@ -1,11 +1,12 @@
 package com.xcoding.rideshare;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,31 +18,18 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hbb20.CountryCodePicker;
-import com.xcoding.rideshare.modals.PasswordEncryption;
 import com.xcoding.rideshare.modals.VerifyNewUserDetails;
-
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private static final String TAG = "CREATE";
     Button signUp;
     TextView backToSignIn;
     EditText fname, lname, email, phoneNumber, password, cPassword;
@@ -53,7 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    private static final String USER = "users";
+    private static final String  USER = "users";
     VerifyNewUserDetails newUser;
 
     @Override
@@ -81,19 +69,11 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                prepareNewUser();
-            }
-        });
+        signUp.setOnClickListener(view -> prepareNewUser());
 
-        backToSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                finish();
-            }
+        backToSignIn.setOnClickListener(view -> {
+            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+            finish();
         });
     }
 
@@ -117,34 +97,41 @@ public class SignUpActivity extends AppCompatActivity {
                 newUser.setFirstName(firstName);
                 newUser.setLastName(lastName);
                 newUser.setEmail(mail);
-                newUser.setCell(cell);
+                newUser.setCell(phoneNumber.getText().toString());
                 newUser.setPass(pass);
                 newUser.setDriver(false);
 
                 String userCredentials = newUser.validate();
 
-                if (userCredentials.equals("firstNameError")) {
-                    fname.setError("Invalid First Name");
-                    fname.requestFocus();
-                } else if (userCredentials.equals("lastNameError")) {
-                    lname.setError("Invalid Last Name");
-                    lname.requestFocus();
-                } else if (userCredentials.equals("emailError")) {
-                    email.setError("Invalid Email");
-                    email.requestFocus();
-                } else if (userCredentials.equals("phoneNumberError")) {
-                    phoneNumber.setError("Invalid Phone Number");
-                    phoneNumber.requestFocus();
-                } else if (userCredentials.equals("passwordError")) {
-                    password.setError("Password Must Have At least 1 special Character, 1 Uppercase letter, 1 Digit and no less that 8 Characters");
-                    password.requestFocus();
-                } else if (userCredentials.equals("ok")) {
-                    progressBar.setVisibility(View.VISIBLE);
-                    sex = this.gender.getText().toString().trim();
-                    newUser.setGender(sex);
-                    newUser.setCell(cell);
+                switch (userCredentials) {
+                    case "firstNameError":
+                        fname.setError("Invalid First Name");
+                        fname.requestFocus();
+                        break;
+                    case "lastNameError":
+                        lname.setError("Invalid Last Name");
+                        lname.requestFocus();
+                        break;
+                    case "emailError":
+                        email.setError("Invalid Email");
+                        email.requestFocus();
+                        break;
+                    case "phoneNumberError":
+                        phoneNumber.setError("Invalid Phone Number");
+                        phoneNumber.requestFocus();
+                        break;
+                    case "passwordError":
+                        password.setError("Password Must Have At least 1 special Character, 1 Uppercase letter, 1 Digit and no less that 8 Characters");
+                        password.requestFocus();
+                        break;
+                    case "ok":
+                        progressBar.setVisibility(View.VISIBLE);
+                        sex = this.gender.getText().toString().trim();
+                        newUser.setGender(sex);
+                        newUser.setCell(cell);
 
-                    createUserAccount(mail,pass);
+                        createUserAccount(mail, pass);
+                        break;
                 }
             } else {
                 cPassword.setError("Password Mismatch");
@@ -162,47 +149,42 @@ public class SignUpActivity extends AppCompatActivity {
         //TODO code to create the user profile
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
 
-                            final FirebaseUser user = mAuth.getCurrentUser();
-                            user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(getApplicationContext(),"Verification Email Sent", LENGTH_LONG).show();
+                        final FirebaseUser user = mAuth.getCurrentUser();
+                        assert user != null;
+                        user.sendEmailVerification().addOnSuccessListener(aVoid -> {
+                            Toast.makeText(getApplicationContext(),"Verification Email Sent", LENGTH_LONG).show();
 
-                                    String keyId = user.getUid();
-                                    mDatabase.child(keyId).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            logout();
-                                        }
-                                    });
-                                    progressBar.setVisibility(View.GONE);
-
-                                    Intent intent = new Intent(getApplicationContext(), VerifyPhoneNumberActivity.class);
-                                    intent.putExtra("phoneNumber",countryCodePicker.getFullNumberWithPlus());
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getApplicationContext(),"Invalid Email..",Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else {
+                            String keyId = user.getUid();
+                            mDatabase.child(keyId).setValue(newUser).addOnSuccessListener(aVoid1 -> logout());
                             progressBar.setVisibility(View.GONE);
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            makeText(getApplicationContext(), "Authentication Failed", LENGTH_LONG).show();
+
+                            Intent intent = new Intent(getApplicationContext(), VerifyPhoneNumberActivity.class);
+                            intent.putExtra("phoneNumber",countryCodePicker.getFullNumberWithPlus());
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(),"Invalid Email..",Toast.LENGTH_SHORT).show());
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        //Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        boolean connected = false;
+                        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                            connected = true;
                         }
-
-                        // ...
-
+                        if (!connected) {
+                            Toast.makeText(getApplicationContext(), "no internet connection", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Email Already exist", Toast.LENGTH_LONG).show();
+                        }
                     }
+
+                    // ...
+
                 });
     }
 
@@ -212,10 +194,7 @@ public class SignUpActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         GoogleSignIn.getClient(this, new GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN
-        ).build()).signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-            }
+        ).build()).signOut().addOnSuccessListener(aVoid -> {
         });
     }
 
