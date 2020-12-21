@@ -2,7 +2,6 @@ package com.xcoding.rideshare.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -174,7 +172,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Long
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 DatabaseReference myRef = database.getReference("pendingRides").child(rideSourceID + uid);
 
-                                int x = 0;
                                 // Read from the database
                                 myRef.addValueEventListener(new ValueEventListener() {
                                     @Override

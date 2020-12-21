@@ -104,7 +104,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             } else {
-                String message = "Your Application was Successfully Submitted and you will be notified via the email";
+                String message = "Your Application was Successfully Submitted and Will be Processed Within 1 Minute";
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setCancelable(true);
                 builder.setTitle("Online Registration Confirmation");

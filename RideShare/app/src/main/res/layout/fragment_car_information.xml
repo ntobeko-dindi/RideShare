@@ -12,9 +12,51 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/round_border"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/round_border"
         android:paddingBottom="20dp">
+
+        <RelativeLayout
+            android:id="@+id/carInfo_layout"
+            android:layout_width="368dp"
+            android:layout_height="569dp"
+            android:layout_marginBottom="-20dp"
+            android:background="@drawable/square_loader"
+            android:elevation="12dp"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.6">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:layout_margin="20dp"
+                android:clickable="false"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="219dp"
+            android:text="@string/category"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextModel" />
 
         <TextView
             android:id="@+id/textView7"
@@ -47,35 +89,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextMake" />
 
-        <EditText
+        <Spinner
             android:id="@+id/editTextMake"
             android:layout_width="260dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="59dp"
             android:layout_marginEnd="60dp"
             android:background="@drawable/square_border"
             android:ems="10"
             android:inputType="textPersonName"
-            android:padding="16dp"
-            android:paddingTop="30dp"
-            android:textSize="20sp"
+            android:textSize="40sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView7"
             tools:ignore="Autofill,LabelFor" />
 
 
-        <EditText
+        <Spinner
             android:id="@+id/editTextModel"
             android:layout_width="260dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="59dp"
             android:layout_marginEnd="60dp"
             android:background="@drawable/square_border"
             android:ems="10"
             android:inputType="textPersonName"
-            android:padding="16dp"
-            android:paddingTop="30dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -87,9 +125,9 @@
             android:id="@+id/textView45"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="59dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="159dp"
+            android:layout_marginEnd="160dp"
             android:text="@string/license_plate_number"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"
@@ -111,40 +149,52 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextModel" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextCategory" />
 
         <EditText
             android:id="@+id/editTextPlateNumber"
             android:layout_width="260dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="59dp"
             android:layout_marginEnd="60dp"
             android:background="@drawable/square_border"
             android:ems="10"
-            android:inputType="none"
-            android:padding="16dp"
-            android:paddingTop="30dp"
+            android:inputType="text"
+            android:paddingStart="10dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView45"
             tools:ignore="Autofill,LabelFor,TextFields" />
 
-        <EditText
+        <Spinner
             android:id="@+id/editTextYear"
             android:layout_width="260dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="59dp"
+            android:background="@drawable/square_border"
+            android:ems="10"
+            android:inputType="none"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8"
+            tools:ignore="Autofill,LabelFor" />
+
+        <Spinner
+            android:id="@+id/editTextCategory"
+            android:layout_width="260dp"
+            android:layout_height="40dp"
             android:layout_marginStart="59dp"
             android:layout_marginEnd="60dp"
             android:background="@drawable/square_border"
             android:ems="10"
             android:inputType="none"
-            android:padding="16dp"
-            android:paddingTop="30dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView8"
+            app:layout_constraintTop_toBottomOf="@+id/textView11"
             tools:ignore="Autofill,LabelFor" />
 
         <Button
@@ -152,7 +202,7 @@
             android:layout_width="220dp"
             android:layout_height="45dp"
             android:layout_marginStart="79dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="80dp"
             android:background="@drawable/round_btn"
             android:backgroundTint="@color/colorPrimaryDark"
@@ -170,12 +220,12 @@
             android:layout_height="45dp"
             android:layout_marginStart="79dp"
             android:layout_marginTop="16dp"
-            android:drawableEnd="@drawable/ic_baseline_arrow_back_24"
-            android:drawablePadding="-90dp"
             android:layout_marginEnd="80dp"
             android:background="@drawable/round_btn"
             android:backgroundTint="@color/colorSecondary"
             android:drawableStart="@drawable/ic_baseline_arrow_back_24"
+            android:drawableEnd="@drawable/ic_baseline_arrow_back_24"
+            android:drawablePadding="-90dp"
             android:elevation="@dimen/cardview_compat_inset_shadow"
             android:text="@string/back"
             android:textColor="@color/White"

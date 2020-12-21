@@ -38,7 +38,6 @@
             android:layout_marginStart="139dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="140dp"
-            android:background="@drawable/person_placeholder"
             app:civ_border_color="@color/White"
             app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"

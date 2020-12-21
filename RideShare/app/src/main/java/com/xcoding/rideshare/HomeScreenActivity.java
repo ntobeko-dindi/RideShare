@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.parse.ParseInstallation;
 import com.shrikanthravi.customnavigationdrawer2.data.MenuItem;
 import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer;
 import com.xcoding.rideshare.fragments.DriverRegistrationFragment;
@@ -58,8 +59,11 @@ public class HomeScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_screen);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        //Inside onCreate()
 
+        // Save the current Installation to Back4App
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+
+        //Inside onCreate()
         storageReference = FirebaseStorage.getInstance().getReference().child("Images/").child(firebaseAuth.getCurrentUser().getUid() + "/profilePic.jpeg");
 
         sNavigationDrawer = findViewById(R.id.navigationDrawer);

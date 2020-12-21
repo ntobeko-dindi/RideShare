@@ -53,6 +53,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     DatePickerDialog.OnDateSetListener setListener;
     String currentPhotoPath;
 
+    private Uri newURI;
+
     private StorageReference mStorageRef;
     private FirebaseAuth firebaseAuth;
     CircleImageView profilePic;
@@ -72,6 +74,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         submit = view.findViewById(R.id.submit);
+        newURI = null;
 
         takePicture.setOnClickListener(this);
         genderMale.setOnClickListener(this);
@@ -130,19 +133,24 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             int currentYear = Integer.parseInt(currentDate);
 
             if (yearOfBirth >= currentYear || currentYear - yearOfBirth < 18) {
-                Toast.makeText(getContext(), "you must be over 18 to become a driver", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "you must be 18 or older to become a driver", Toast.LENGTH_LONG).show();
             } else {
-                String keyId = firebaseAuth.getCurrentUser().getUid();
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("users").child(keyId).child("dateOfBirth");
+                if (profilePic.getDrawable() == null) {
+                    Toast.makeText(getContext(), "please upload you photo first", Toast.LENGTH_LONG).show();
+                } else {
+                    String keyId = firebaseAuth.getCurrentUser().getUid();
 
-                myRef.setValue(dob.getText().toString()).addOnSuccessListener(aVoid -> {
-                    FragmentTransaction t = getFragmentManager().beginTransaction();
-                    Fragment mFrag = new CarInformationFragment();
-                    t.replace(R.id.frameLayout, mFrag);
-                    t.commit();
-                });
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("users").child(keyId).child("dateOfBirth");
+
+                    myRef.setValue(dob.getText().toString()).addOnSuccessListener(aVoid -> {
+                        FragmentTransaction t = getFragmentManager().beginTransaction();
+                        Fragment mFrag = new CarInformationFragment();
+                        t.replace(R.id.frameLayout, mFrag);
+                        t.commit();
+                    });
+                }
             }
         } catch (Exception ignored) {
             dob.setError("date of birth cannot be empty");
@@ -154,6 +162,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     private void askCameraPermission() {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) getContext(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+            askCameraPermission();
         } else {
             dispatchTakePictureIntent();
         }
@@ -167,8 +176,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             } else {
                 Toast.makeText(getContext(), "permission required", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(getContext(), String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -183,8 +190,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
             File f = new File(currentPhotoPath);
             Uri uri = Uri.fromFile(f);
+            newURI = uri;
             uploadImage(uri);
-
         }
     }
 
@@ -220,6 +227,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 Uri photoURI = FileProvider.getUriForFile(getContext(),
                         "com.example.android.fileprovider",
                         photoFile);
+                newURI = photoURI;
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
             }
@@ -228,7 +236,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
 
     void uploadImage(Uri file) {
-
+        newURI = file;
         StorageReference riversRef = mStorageRef.child("Images/" + firebaseAuth.getCurrentUser().getUid() + "/profilePic");
 
         riversRef.putFile(file)
@@ -263,17 +271,17 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getUserProfilePictureFromDB() {
-        String userID = firebaseAuth.getCurrentUser().getUid();
-        StorageReference riversRef = mStorageRef.child("Images/" + userID + "/profilePic");
         try {
+            String userID = firebaseAuth.getCurrentUser().getUid();
+            StorageReference riversRef = mStorageRef.child("Images/" + userID + "/profilePic");
             final File localFile = File.createTempFile("profilePic", "*");
             riversRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
                 if (getActivity() != null) {
                     Glide.with(getContext()).load(String.valueOf(localFile.toURI())).into(profilePic);
                 }
-            }).addOnFailureListener(e -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show());
-        } catch (IOException e) {
-            Toast.makeText(getContext(), "IOException", Toast.LENGTH_LONG).show();
+            }).addOnFailureListener(e -> {
+            });
+        } catch (IOException ignored) {
         }
     }
 
@@ -283,14 +291,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         if ("".equals(fName.getText().toString())) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras == null) {
-                Toast.makeText(getContext(), "no extras to display", Toast.LENGTH_LONG).show();
             } else {
 
                 fName.setText(extras.getString("firstName"));
                 lName.setText(extras.getString("lastNameFromDB"));
                 String dateOfBirth = extras.getString("dateOfBirth");
 
-                if(dateOfBirth != null){
+                if (dateOfBirth != null) {
                     dob.setText(dateOfBirth);
                 }
 
@@ -314,10 +321,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         super.onResume();
         if ("".equals(fName.getText().toString())) {
             Bundle extras = getActivity().getIntent().getExtras();
-            if (extras == null) {
-                Toast.makeText(getContext(), "no extras to display", Toast.LENGTH_LONG).show();
-            } else {
-
+            if (extras != null) {
                 fName.setText(extras.getString("firstName"));
                 lName.setText(extras.getString("lastNameFromDB"));
                 String sex = extras.getString("gender");
@@ -333,6 +337,10 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
                 }
             }
+        }
+        if(newURI != null){
+            uploadImage(newURI);
+            Glide.with(this).load(String.valueOf(newURI)).into(profilePic);
         }
     }
 }

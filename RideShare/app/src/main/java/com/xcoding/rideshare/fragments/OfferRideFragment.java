@@ -1,6 +1,7 @@
 package com.xcoding.rideshare.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -9,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -17,10 +17,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -75,244 +75,270 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
 
         final Bundle bundle = getActivity().getIntent().getExtras();
 
-        longDistance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String carMake = "";
-                boolean driver = false;
-                try {
-                    carMake = bundle.getString("make");
-                    driver = bundle.getBoolean("isDriver");
-                }catch (Exception ex){
-                    Toast.makeText(getContext(),ex.getMessage(),Toast.LENGTH_LONG).show();
-                }
-                if (carMake != null) {
-                    if(driver) {
+        longDistance.setOnClickListener((View.OnClickListener) view17 -> {
+            String carMake = "";
+            boolean driver = false;
+            try {
+                carMake = bundle.getString("make");
+                driver = bundle.getBoolean("isDriver");
+            } catch (Exception ex) {
+                Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            if (carMake != null) {
+                if (driver) {
 
-                        bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetTheme);
+                    bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetTheme);
 
-                        final View sheetView = LayoutInflater.from(getContext()).inflate(R.layout.long_distance_bottom_sheet_layout,
-                                (ViewGroup) view.findViewById(R.id.long_distance_bottom_sheet));
+                    final View sheetView = LayoutInflater.from(getContext()).inflate(R.layout.long_distance_bottom_sheet_layout,
+                            (ViewGroup) view17.findViewById(R.id.long_distance_bottom_sheet));
 
-                        //getValues from a bottom sheet here
-                        sheetView.findViewById(R.id.long_distance_sheet_close).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                bottomSheetDialog.dismiss();
+                    //getValues from a bottom sheet here
+                    sheetView.findViewById(R.id.long_distance_sheet_close).setOnClickListener(view16 -> bottomSheetDialog.dismiss());
+
+                    sheetView.findViewById(R.id.long_distance_date).setOnClickListener(view15 -> {
+                        Calendar cal = Calendar.getInstance();
+                        int year = cal.get(Calendar.YEAR);
+                        int month = cal.get(Calendar.MONTH);
+                        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                        DatePickerDialog dialog = new DatePickerDialog(
+                                getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,//Theme_Holo_Dialog_MinWidth
+                                mDateListener, year, month, day);
+
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.show();
+
+                        mDateListener = (datePicker, year13, month13, date) -> {
+                            month13 += 1;
+
+                            String fullDate = date + "/" + month13 + "/" + year13;
+                            EditText dateInput = sheetView.findViewById(R.id.long_distance_date);
+                            dateInput.setText(fullDate);
+                        };
+                    });
+
+                    sheetView.findViewById(R.id.btn_long_distance_submit_ride_offer).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view17) {
+                            //TODO code what happens when offer ride submit button is clicked in a method called submitLongRide()
+                            submitLongRide();
+                        }
+
+                        private void submitLongRide() {
+                            //TODO validate text-fields, get data and insert in into a database
+
+
+                            EditText beginning, end, date, sits, price;
+
+                            beginning = sheetView.findViewById(R.id.long_distance_beginning);
+                            end = sheetView.findViewById(R.id.long_distance_destination);
+                            date = sheetView.findViewById(R.id.long_distance_date);
+                            sits = sheetView.findViewById(R.id.long_distance_number_of_sits);
+                            price = sheetView.findViewById(R.id.long_distance_price);
+
+                            String inputBeginning = beginning.getText().toString();
+                            String inputEnd = end.getText().toString().trim();
+                            String inputDate = date.getText().toString().trim();
+                            String inputSits = sits.getText().toString().trim();
+                            String inputPrice = price.getText().toString().trim();
+
+                            boolean fieldsOkay = true;
+
+                            if (inputBeginning.equals("")) {
+                                showError(beginning, "departure location required");
+                                fieldsOkay = false;
                             }
-                        });
+                            if (inputEnd.equals("")) {
+                                showError(end, "destination required");
+                                fieldsOkay = false;
+                            }
+                            if (inputDate.equals("")) {
+                                showError(date, "departure date required");
+                                fieldsOkay = false;
+                            }
+                            if (inputDate.length() > 0) {
+                                int d, m, y;
+                                try {
+                                    d = Integer.parseInt(inputDate.substring(0, 2));
+                                    m = Integer.parseInt(inputDate.substring(3, 5));
+                                    y = Integer.parseInt(inputDate.substring(6, 10));
 
-                        sheetView.findViewById(R.id.long_distance_date).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(final View view) {
-                                Calendar cal = Calendar.getInstance();
-                                int year = cal.get(Calendar.YEAR);
-                                int month = cal.get(Calendar.MONTH);
-                                int day = cal.get(Calendar.DAY_OF_MONTH);
+                                    int year = Calendar.getInstance().get(Calendar.YEAR);
+                                    int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+                                    int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
-                                DatePickerDialog dialog = new DatePickerDialog(
-                                        getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,//Theme_Holo_Dialog_MinWidth
-                                        mDateListener, year, month, day);
-
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                dialog.show();
-
-                                mDateListener = new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                                        month += 1;
-
-                                        String fullDate = date + "/" + month + "/" + year;
-                                        EditText dateInput = sheetView.findViewById(R.id.long_distance_date);
-                                        dateInput.setText(fullDate);
+                                    if (y < year) {
+                                        fieldsOkay = false;
+                                        showError(date, "date invalid");
+                                        date.requestFocus();
+                                    } else if (y == year && m < month) {
+                                        fieldsOkay = false;
+                                        showError(date, "date invalid");
+                                        date.requestFocus();
                                     }
-                                };
+                                    else if (y == year && m == month && d < day) {
+                                        fieldsOkay = false;
+                                        showError(date, "date invalid");
+                                        date.requestFocus();
+                                    }
+                                } catch (Exception ex) {
+                                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                                    showError(date, "date invalid");
+                                    date.requestFocus();
+                                    fieldsOkay = false;
+                                }
                             }
-                        });
+                            if (inputSits.equals("")) {
+                                showError(sits, "no of sits required");
+                                fieldsOkay = false;
+                            } else {
+                                try {
+                                    if (Integer.parseInt(inputSits) > 4) {
+                                        showError(sits, "too many passenger sits, you can only offer 4 or less");
+                                        fieldsOkay = false;
+                                    } else if (Integer.parseInt(inputSits) <= 0) {
+                                        showError(sits, "sits cannot be less than 1");
+                                        fieldsOkay = false;
+                                    }
+                                } catch (Exception ignored) {
 
-                        sheetView.findViewById(R.id.btn_long_distance_submit_ride_offer).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                //TODO code what happens when offer ride submit button is clicked in a method called submitLongRide()
-                                submitLongRide();
+                                }
+                            }
+                            if (inputPrice.equals("")) {
+                                showError(price, "price per sit required");
+                                fieldsOkay = false;
+                            } else {
+                                try {
+                                    if (Integer.parseInt(inputSits) <= 0) {
+                                        showError(price, "invalid number sits");
+                                        fieldsOkay = false;
+                                    }
+                                } catch (Exception ignored) {
+
+                                }
                             }
 
-                            private void submitLongRide() {
-                                //TODO validate text-fields, get data and insert in into a database
 
+                            if (fieldsOkay) {
+                                LongDistanceCommuteModal longDistance = new LongDistanceCommuteModal();
+                                longDistance.setBeginning(inputBeginning);
+                                longDistance.setDestination(inputEnd);
+                                longDistance.setDate(inputDate);
+                                longDistance.setSits(inputSits);
+                                longDistance.setPrice(inputPrice);
+                                longDistance.setRideSourceID(firebaseAuth.getCurrentUser().getUid());
+                                String fnam = bundle.getString("lastNameFromDB") + " " + bundle.getString("firstName");
+                                longDistance.setRideSourceName(fnam);
 
-                                EditText beginning, end, date, sits, price;
+                                Date currentDate = new Date();
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
+                                longDistance.setTime(formatter.format(currentDate));
 
-                                beginning = sheetView.findViewById(R.id.long_distance_beginning);
-                                end = sheetView.findViewById(R.id.long_distance_destination);
-                                date = sheetView.findViewById(R.id.long_distance_date);
-                                sits = sheetView.findViewById(R.id.long_distance_number_of_sits);
-                                price = sheetView.findViewById(R.id.long_distance_price);
-
-                                String inputBeginning = beginning.getText().toString();
-                                String inputEnd = end.getText().toString().trim();
-                                String inputDate = date.getText().toString().trim();
-                                String inputSits = sits.getText().toString().trim();
-                                String inputPrice = price.getText().toString().trim();
-
-                                boolean fieldsOkay = true;
-
-                                if (inputBeginning.equals("")) {
-                                    showError(beginning, "departure location required");
-                                    fieldsOkay = false;
-                                }
-                                if (inputEnd.equals("")) {
-                                    showError(end, "destination required");
-                                    fieldsOkay = false;
-                                }
-                                if (inputDate.equals("")) {
-                                    showError(date, "departure date required");
-                                    fieldsOkay = false;
-                                }
-                                if (inputSits.equals("")) {
-                                    showError(sits, "no of sits required");
-                                    fieldsOkay = false;
-                                }
-                                if (inputPrice.equals("")) {
-                                    showError(price, "price per sit required");
-                                    fieldsOkay = false;
-                                }
-                                if(Integer.valueOf(inputSits) <= 0){
-                                    showError(price, "invalid number sits");
-                                    fieldsOkay = false;
-                                }
-
-
-                                if (fieldsOkay) {
-                                    LongDistanceCommuteModal longDistance = new LongDistanceCommuteModal();
-                                    longDistance.setBeginning(inputBeginning);
-                                    longDistance.setDestination(inputEnd);
-                                    longDistance.setDate(inputDate);
-                                    longDistance.setSits(inputSits);
-                                    longDistance.setPrice(inputPrice);
-                                    longDistance.setRideSourceID(firebaseAuth.getCurrentUser().getUid());
-                                    String fnam = bundle.getString("lastNameFromDB") + " " +bundle.getString("firstName");
-                                    longDistance.setRideSourceName(fnam);
-
-                                    Date currentDate = new Date();
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
-                                    longDistance.setTime(formatter.format(currentDate));
-
-                                    //writing the trip into firebase
-                                    mDatabase = database.getReference("offeredRides/longDistance");
-                                    String keyId = firebaseAuth.getCurrentUser().getUid();
-                                    mDatabase.child(keyId).setValue(longDistance).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(getContext(), "data written", Toast.LENGTH_LONG).show();
-                                            bottomSheetDialog.dismiss();
-                                        }
+                                //writing the trip into firebase
+                                mDatabase = database.getReference("offeredRides/longDistance");
+                                String keyId = firebaseAuth.getCurrentUser().getUid();
+                                mDatabase.child(keyId).setValue(longDistance).addOnSuccessListener(aVoid -> {
+                                    bottomSheetDialog.dismiss();
+                                    String message = "Ride Offer Successfully Created";
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setCancelable(true);
+                                    builder.setTitle("Confirmation");
+                                    builder.setMessage(message);
+                                    builder.setPositiveButton("OKAY!",
+                                            (dialog, which) -> {
+                                            });
+                                    builder.setNegativeButton(null, (dialog, which) -> {
+                                        //TODO
                                     });
-                                }
+
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
+                                });
                             }
-                        });
+                        }
+                    });
 
 
-                        bottomSheetDialog.setContentView(sheetView);
-                        bottomSheetDialog.show();
-                        bottomSheetDialog.setCanceledOnTouchOutside(false);
-                    }else {
-                        Toast.makeText(getContext(), "you have not been approved as a driver", Toast.LENGTH_LONG).show();
-                    }
+                    bottomSheetDialog.setContentView(sheetView);
+                    bottomSheetDialog.show();
+                    bottomSheetDialog.setCanceledOnTouchOutside(false);
                 } else {
-                    Toast.makeText(getContext(), "please register as driver first", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "you have not been approved as a driver", Toast.LENGTH_LONG).show();
                 }
+            } else {
+                Toast.makeText(getContext(), "please register as driver first", Toast.LENGTH_LONG).show();
             }
         });
 
-        dailyCommute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        dailyCommute.setOnClickListener((View.OnClickListener) view14 -> {
 
-                String carMake = "";
-                boolean driver = false;
-                try {
-                    carMake = bundle.getString("make");
-                    driver = bundle.getBoolean("isDriver");
-                }catch (Exception ex){
-                    Toast.makeText(getContext(),ex.getMessage(),Toast.LENGTH_LONG).show();
-                }
-                if (carMake != null) {
-                    if(driver) {
+            String carMake = "";
+            boolean driver = false;
+            try {
+                carMake = bundle.getString("make");
+                driver = bundle.getBoolean("isDriver");
+            } catch (Exception ex) {
+                Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            if (carMake != null) {
+                if (driver) {
 
                     bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetTheme);
 
                     final View sheetView = LayoutInflater.from(getContext()).inflate(R.layout.daily_commute_bottom_sheet_layout,
-                            (ViewGroup) view.findViewById(R.id.daily_commute_bottom_sheet));
+                            (ViewGroup) view14.findViewById(R.id.daily_commute_bottom_sheet));
 
                     //getValues from a bottom sheet here
-                    sheetView.findViewById(R.id.short_distance_sheet_close).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            bottomSheetDialog.dismiss();
-                        }
+                    sheetView.findViewById(R.id.short_distance_sheet_close).setOnClickListener(view12 -> bottomSheetDialog.dismiss());
+
+
+                    sheetView.findViewById(R.id.short_distance_start_date).setOnClickListener(view1 -> {
+                        Calendar cal = Calendar.getInstance();
+                        int year = cal.get(Calendar.YEAR);
+                        int month = cal.get(Calendar.MONTH);
+                        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                        DatePickerDialog dialog = new DatePickerDialog(
+                                getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,//Theme_Holo_Dialog_MinWidth
+                                mDateListener, year, month, day);
+
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.show();
+
+                        mDateListener = (datePicker, year1, month1, date) -> {
+                            month1 = month1 + 1;
+                            String fullDate = date + "/" + month1 + "/" + year1;
+                            EditText dateInput = sheetView.findViewById(R.id.short_distance_start_date);
+                            dateInput.setText(fullDate);
+                        };
                     });
 
 
-                    sheetView.findViewById(R.id.short_distance_start_date).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            Calendar cal = Calendar.getInstance();
-                            int year = cal.get(Calendar.YEAR);
-                            int month = cal.get(Calendar.MONTH);
-                            int day = cal.get(Calendar.DAY_OF_MONTH);
+                    sheetView.findViewById(R.id.short_distance_end_date).setOnClickListener(view13 -> {
+                        Calendar cal = Calendar.getInstance();
+                        int year = cal.get(Calendar.YEAR);
+                        int month = cal.get(Calendar.MONTH);
+                        int day = cal.get(Calendar.DAY_OF_MONTH);
 
-                            DatePickerDialog dialog = new DatePickerDialog(
-                                    getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,//Theme_Holo_Dialog_MinWidth
-                                    mDateListener, year, month, day);
+                        DatePickerDialog dialog = new DatePickerDialog(
+                                getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,//Theme_Holo_Dialog_MinWidth
+                                mDateListener, year, month, day);
 
-                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            dialog.show();
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.show();
 
-                            mDateListener = new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                                    month = month + 1;
-                                    String fullDate = date + "/" + month + "/" + year;
-                                    EditText dateInput = sheetView.findViewById(R.id.short_distance_start_date);
-                                    dateInput.setText(fullDate);
-                                }
-                            };
-                        }
-                    });
+                        mDateListener = (datePicker, year12, month12, date) -> {
+                            month12 = month12 + 1;
 
-
-                    sheetView.findViewById(R.id.short_distance_end_date).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            Calendar cal = Calendar.getInstance();
-                            int year = cal.get(Calendar.YEAR);
-                            int month = cal.get(Calendar.MONTH);
-                            int day = cal.get(Calendar.DAY_OF_MONTH);
-
-                            DatePickerDialog dialog = new DatePickerDialog(
-                                    getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth,//Theme_Holo_Dialog_MinWidth
-                                    mDateListener, year, month, day);
-
-                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            dialog.show();
-
-                            mDateListener = new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                                    month = month + 1;
-
-                                    String fullDate = date + "/" + month + "/" + year;
-                                    EditText dateInput = sheetView.findViewById(R.id.short_distance_end_date);
-                                    dateInput.setText(fullDate);
-                                }
-                            };
-                        }
+                            String fullDate = date + "/" + month12 + "/" + year12;
+                            EditText dateInput = sheetView.findViewById(R.id.short_distance_end_date);
+                            dateInput.setText(fullDate);
+                        };
                     });
 
                     sheetView.findViewById(R.id.btn_short_distance_submit_ride_offer).setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View view) {
+                        public void onClick(View view14) {
                             //TODO code what happens when offer ride submit button is clicked in a method called submitShortRide()
                             submitShortRide();
                         }
@@ -351,17 +377,102 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
                                 showError(startDate, "starting date required");
                                 dataOkay = false;
                             }
+                            if (inputStartDate.length() > 0) {
+                                int d, m, y;
+                                try {
+                                    d = Integer.parseInt(inputStartDate.substring(0, 2));
+                                    m = Integer.parseInt(inputStartDate.substring(3, 5));
+                                    y = Integer.parseInt(inputStartDate.substring(6, 10));
+
+                                    int year = Calendar.getInstance().get(Calendar.YEAR);
+                                    int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+                                    int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+                                    if (y < year) {
+                                        dataOkay = false;
+                                        showError(startDate, "date invalid");
+                                        startDate.requestFocus();
+                                    } else if (y == year && m < month) {
+                                        dataOkay = false;
+                                        showError(startDate, "date invalid");
+                                        startDate.requestFocus();
+                                    }
+                                    else if (y == year && m == month && d < day) {
+                                        dataOkay = false;
+                                        showError(startDate, "date invalid");
+                                        startDate.requestFocus();
+                                    }
+                                } catch (Exception ex) {
+                                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                                    showError(startDate, "date invalid");
+                                    startDate.requestFocus();
+                                    dataOkay = false;
+                                }
+                            }
+
                             if (inputEndDate.equals("")) {
                                 showError(endDate, "ending date required");
                                 dataOkay = false;
+                            }if (inputEndDate.length() > 0) {
+                                int d, m, y;
+                                try {
+                                    d = Integer.parseInt(inputEndDate.substring(0, 2));
+                                    m = Integer.parseInt(inputEndDate.substring(3, 5));
+                                    y = Integer.parseInt(inputEndDate.substring(6, 10));
+
+                                    int year = Calendar.getInstance().get(Calendar.YEAR);
+                                    int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+                                    int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+                                    if (y < year) {
+                                        dataOkay = false;
+                                        showError(endDate, "date invalid");
+                                        endDate.requestFocus();
+                                    } else if (y == year && m < month) {
+                                        dataOkay = false;
+                                        showError(endDate, "date invalid");
+                                        endDate.requestFocus();
+                                    }
+                                    else if (y == year && m == month && d < day) {
+                                        dataOkay = false;
+                                        showError(endDate, "date invalid");
+                                        endDate.requestFocus();
+                                    }
+                                } catch (Exception ex) {
+                                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                                    showError(endDate, "date invalid");
+                                    endDate.requestFocus();
+                                    dataOkay = false;
+                                }
                             }
                             if (inputSits.equals("")) {
                                 showError(sits, "no of sits required");
                                 dataOkay = false;
+                            } else {
+                                try {
+                                    if (Integer.parseInt(inputSits) > 4) {
+                                        showError(sits, "too many passenger sits, you can only offer 4 or less");
+                                        dataOkay = false;
+                                    } else if (Integer.parseInt(inputSits) <= 0) {
+                                        showError(sits, "sits cannot be less than 1");
+                                        dataOkay = false;
+                                    }
+                                } catch (Exception ignored) {
+
+                                }
                             }
                             if (inputPrice.equals("")) {
                                 showError(price, "price per sit required");
                                 dataOkay = false;
+                            } else {
+                                try {
+                                    if (Integer.parseInt(inputSits) <= 0) {
+                                        showError(sits, "invalid amount");
+                                        dataOkay = false;
+                                    }
+                                } catch (Exception ignored) {
+
+                                }
                             }
 
                             if (dataOkay) {
@@ -384,12 +495,22 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
                                 //writing the trip into firebase
                                 mDatabase = database.getReference("offeredRides/shortDistance");
                                 String keyId = firebaseAuth.getCurrentUser().getUid();
-                                mDatabase.child(keyId).setValue(commuteModal).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getContext(), "data written", Toast.LENGTH_LONG).show();
-                                        bottomSheetDialog.dismiss();
-                                    }
+                                mDatabase.child(keyId).setValue(commuteModal).addOnSuccessListener(aVoid -> {
+                                    bottomSheetDialog.dismiss();
+                                    String message = "Ride Offer Successfully Created";
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setCancelable(true);
+                                    builder.setTitle("Confirmation");
+                                    builder.setMessage(message);
+                                    builder.setPositiveButton("OKAY!",
+                                            (dialog, which) -> {
+                                            });
+                                    builder.setNegativeButton(null, (dialog, which) -> {
+                                        //TODO
+                                    });
+
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
                                 });
                             }
                         }
@@ -398,12 +519,11 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
                     bottomSheetDialog.setContentView(sheetView);
                     bottomSheetDialog.show();
                     bottomSheetDialog.setCanceledOnTouchOutside(false);
-                    }else {
-                        Toast.makeText(getContext(), "you have not been approved as a driver", Toast.LENGTH_LONG).show();
-                    }
                 } else {
-                    Toast.makeText(getContext(), "please register as driver first", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "you have not been approved as a driver", Toast.LENGTH_LONG).show();
                 }
+            } else {
+                Toast.makeText(getContext(), "please register as driver first", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -426,16 +546,16 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
         getRideRequests();
     }
 
-    void getRideRequests(){
+    void getRideRequests() {
         reference = FirebaseDatabase.getInstance().getReference("rideRequests");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     RequestRideModel modal = dataSnapshot.getValue(RequestRideModel.class);
                     requestRideModel.add(modal);
                 }
-                requestsAdapter = new RequestsAdapter(requestRideModel,getContext());
+                requestsAdapter = new RequestsAdapter(requestRideModel, getContext());
                 recyclerView.setAdapter(requestsAdapter);
             }
 
@@ -444,5 +564,5 @@ public class OfferRideFragment extends Fragment implements View.OnClickListener 
 
             }
         });
-   }
+    }
 }

@@ -140,6 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         } catch (NullPointerException e) {
             makeText(getApplicationContext(), "Please Select Your Gender", LENGTH_LONG).show();
+            progressBar.setVisibility(View.GONE);
         } catch (Exception ex) {
             makeText(getApplicationContext(), ex.getMessage(), LENGTH_LONG).show();
         }
@@ -163,6 +164,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(getApplicationContext(), VerifyPhoneNumberActivity.class);
                             intent.putExtra("phoneNumber",countryCodePicker.getFullNumberWithPlus());
+                            intent.putExtra("email",email);
+                            intent.putExtra("pass",password);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();

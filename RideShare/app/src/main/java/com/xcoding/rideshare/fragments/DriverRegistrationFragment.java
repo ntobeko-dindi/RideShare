@@ -1,19 +1,16 @@
 package com.xcoding.rideshare.fragments;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
+
 import com.xcoding.rideshare.R;
-import java.util.Objects;
 
-public class DriverRegistrationFragment extends Fragment{
-
+public class DriverRegistrationFragment extends Fragment {
 
 
     @Override
@@ -22,9 +19,23 @@ public class DriverRegistrationFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_driver_registration, container, false);
 
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id. frameLayout, new WalkThrough())
-                .commit();
+        try {
+
+            Bundle bundle = getActivity().getIntent().getExtras();
+            boolean isDriver = bundle.getBoolean("isDriver");
+
+            if (isDriver){
+                getFragmentManager().beginTransaction()
+                        .replace(R.id. frameLayout, new RegisterFragment())
+                        .commit();
+            }else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.frameLayout, new WalkThrough())
+                    .commit();
+        }
         return view;
     }
 }

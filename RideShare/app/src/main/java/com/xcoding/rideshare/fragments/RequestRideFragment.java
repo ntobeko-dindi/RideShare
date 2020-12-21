@@ -222,20 +222,9 @@ public class RequestRideFragment extends Fragment implements View.OnClickListene
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         String value = dataSnapshot.child("bookedSits").getValue(String.class);
-                                        String oldPrice = dataSnapshot.child("totalRidePrice").getValue(String.class);
-
-                                        Toast.makeText(getContext(), "booked sits from user " + sitsBooked, Toast.LENGTH_LONG).show();
-                                        Toast.makeText(getContext(), "booked sits from database " + value, Toast.LENGTH_LONG).show();
-
 
                                         int newNumSit = Integer.parseInt(sitsBooked) + Integer.parseInt(value);
                                         double newPrice = (totalPrice / Double.parseDouble(sitsBooked)) * newNumSit;
-
-                                        Toast.makeText(getContext(), "old price R " + oldPrice, Toast.LENGTH_LONG).show();
-                                        Toast.makeText(getContext(), "new price R " + newPrice, Toast.LENGTH_LONG).show();
-                                        Toast.makeText(getContext(), "new number sits " + newNumSit, Toast.LENGTH_LONG).show();
-
-
                                         myRef.removeEventListener(this);
                                         myRef.child("bookedSits").setValue(String.valueOf(newNumSit))
                                                 .addOnSuccessListener(aVoid -> {
@@ -330,6 +319,39 @@ public class RequestRideFragment extends Fragment implements View.OnClickListene
             requesterDepartureDate.requestFocus();
             fieldsOkay = false;
         }
+        if (date.length() > 0) {
+            int d, m, y;
+            try {
+                d = Integer.parseInt(date.substring(0, 2));
+                m = Integer.parseInt(date.substring(3, 5));
+                y = Integer.parseInt(date.substring(6, 10));
+
+                int year = Calendar.getInstance().get(Calendar.YEAR);
+                int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+                int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+                if (y < year) {
+                    fieldsOkay = false;
+                    requesterDepartureDate.setError("date invalid");
+                    requesterDepartureDate.requestFocus();
+                } else if (y == year && m < month) {
+                    fieldsOkay = false;
+                    requesterDepartureDate.setError("date invalid");
+                    requesterDepartureDate.requestFocus();
+                }
+                else if (y == year && m == month && d < day) {
+                    fieldsOkay = false;
+                    requesterDepartureDate.setError("date invalid");
+                    requesterDepartureDate.requestFocus();
+                }
+            } catch (Exception ex) {
+                Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                requesterDepartureDate.setError("date invalid");
+                requesterDepartureDate.requestFocus();
+                fieldsOkay = false;
+            }
+        }
+
         if (fieldsOkay) {
             requestRideModel.setBeginning(start);
             requestRideModel.setEnd(end);
